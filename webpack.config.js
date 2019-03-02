@@ -1,7 +1,6 @@
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const merge = require("webpack-merge");
 const webpack = require("webpack");
@@ -40,27 +39,17 @@ const common = {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules)/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['env']
-          }
-        }
-      },
-      {
-        test: /\.(ts)$/,
-        exclude: /(node_modules)/,
-        use: {
-          loader: 'awesome-typescript-loader',
-          options: {
-            useCache: false,
+            presets: ["env"]
           }
         }
       },
       {
         test: /\.(css)$/,
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader'
+          fallback: "style-loader",
+          use: "css-loader"
         })
       },
       {
@@ -68,7 +57,7 @@ const common = {
         exclude: /(node_modules)/,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
               name: "[path][name].[ext]?[hash]"
             }
@@ -80,42 +69,44 @@ const common = {
   plugins: [
     new CleanWebpackPlugin([paths.build]),
     new HtmlWebpackPlugin(htmlConfig),
-    new ExtractTextPlugin('styles.[contenthash].css'),
+    new ExtractTextPlugin("styles.[contenthash].css")
   ]
 };
 
 const devSettings = {
-  devtool: 'eval-source-map',
+  devtool: "eval-source-map",
   devServer: {
-    historyApiFallback: true,
+    historyApiFallback: true
   },
   output: {
     path: paths.build,
-    filename: 'bundle.[hash].js',
-    publicPath: '/'
+    filename: "bundle.[hash].js",
+    publicPath: "/"
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new CleanWebpackPlugin([paths.build]),
+    new CleanWebpackPlugin([paths.build])
   ]
-}
+};
 
 const prodSettings = {
-  devtool: 'source-map',
+  devtool: "source-map",
   output: {
     path: paths.build,
-    filename: 'bundle.[hash].js',
-    publicPath: '/build/'
+    filename: "bundle.[hash].js",
+    publicPath: "/build/"
   },
   plugins: [
-    new webpack.DefinePlugin({ 'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }}),
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify("production")
+      }
+    }),
     new webpack.optimize.UglifyJsPlugin(uglifyConfig),
     new OptimizeCssAssetsPlugin(),
-    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin()
   ]
-}
+};
 
 /**
  * Exports
@@ -124,10 +115,10 @@ const prodSettings = {
 const TARGET = process.env.npm_lifecycle_event;
 process.env.BABEL_ENV = TARGET;
 
-if (TARGET === 'start') {
-  module.exports = merge(common, devSettings)
+if (TARGET === "start") {
+  module.exports = merge(common, devSettings);
 }
 
-if (TARGET === 'build' || !TARGET) {
-  module.exports = merge(common, prodSettings)
+if (TARGET === "build" || !TARGET) {
+  module.exports = merge(common, prodSettings);
 }
