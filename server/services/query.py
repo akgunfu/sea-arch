@@ -1,5 +1,3 @@
-# coding=utf-8
-
 import unicodedata
 import re
 
@@ -26,8 +24,6 @@ def get_normalized_string(token_str):
 
 
 def get_token_string(token):
-    print token
-    print type(token)
     if type(token) is str:
         token_str = token
     elif type(token) is unicode:

@@ -17,7 +17,8 @@ def search():
     request_data = request.json
     question = request_data.get('question')
     choice = request_data.get('choice')
-    result = search_counts(build_query([question, choice]))
+    engine = request_data.get('engine')
+    result = search_counts(build_query([question, choice]), engine)
     return response_success({'result': result})
 
 

@@ -1,3 +1,11 @@
+export const SEARCH_ENGINES = {
+  GOOGLE: "google",
+  YAHOO: "yahoo",
+  YANDEX: "yandex",
+  BING: "bing",
+  DUCKDUCKGO: "duck"
+};
+
 export const EVENTS = {
   STARTED: { description: "Application started", success: true },
   REQUEST_CAPTURE: {

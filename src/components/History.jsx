@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Timeline } from "antd";
+import { Button, Timeline, Card } from "antd";
 
 function History(props) {
   const { events = [], onStart } = props;
@@ -7,7 +7,7 @@ function History(props) {
   const started = events.length > 0;
 
   return started ? (
-    <div>
+    <Card className="actions">
       <Button type="primary" size="large" onClick={onStart}>
         Start
       </Button>
@@ -18,13 +18,13 @@ function History(props) {
           </Timeline.Item>
         ))}
       </Timeline>
-    </div>
+    </Card>
   ) : (
-    <div>
+    <Card>
       <Button type="primary" size="large" onClick={onStart}>
         Start
       </Button>
-    </div>
+    </Card>
   );
 }
 
