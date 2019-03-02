@@ -1,0 +1,38 @@
+body,
+html {
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.questionCardContainer {
+  margin: 0 auto;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  width: 300px;
+  height: 400px;
+}
+.questionContainer {
+  border: 1px solid black;
+  height: 130px;
+  padding: 10px;
+}
+
+.choicesContainer {
+  height: 270px;
+}
+.choiceContainer {
+  height: 90px;
+  padding: 10px;
+}
+
+.test {
+  flex: 1;
+  height: 50px;
+  border: 1px solid black;
+}

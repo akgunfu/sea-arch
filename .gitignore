@@ -1,0 +1,7 @@
+node_modules
+build
+*.swp
+*.pem
+*.pyc
+__pycache__
+.cache
