@@ -24,11 +24,10 @@ const asa = (text = "") => {
 };
 
 function SearchContainer(props) {
-
   console.log(props);
-  const {q} = props;
-  const {question = '', choices = {}} = q;
-  const {a = '', b= '', c= ''} = choices;
+  const { q } = props;
+  const { question = "", choices = {} } = q;
+  const { a = "", b = "", c = "" } = choices;
 
   console.log(question, choices, a, b, c);
 
@@ -52,7 +51,11 @@ function SearchContainer(props) {
       .then(a => {
         console.log(a);
         setFetching(false);
-        setStats({ a1: asa(a.data.a1), a2: asa(a.data.a2), a3: asa(a.data.a3) });
+        setStats({
+          a1: asa(a.data.a1),
+          a2: asa(a.data.a2),
+          a3: asa(a.data.a3)
+        });
       })
       .catch(e => {
         message.error("Hata oluştu");
@@ -76,7 +79,7 @@ function SearchContainer(props) {
         </div>
         <div className="choicesContainer">
           <div className="choiceContainer">
-              <p>{choice1}</p>
+            <p>{choice1}</p>
             <StatusBar ratio={a1 / (a1 + a2 + a3)} />
           </div>
           <div className="choiceContainer">
