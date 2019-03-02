@@ -16,13 +16,18 @@ def build_url(query):
 def search_counts(word):
     try:
         url = build_url(word)
-        print url
         req = urllib2.Request(url, headers=header)
         response = urllib2.urlopen(req)
         html = response.read()
         soup = BeautifulSoup(html, features="lxml")
         div = soup.find(id="resultStats")
-        return div.text
+        result_str = div.text
+
+        tokens = result_str.split(' ')
+        try:
+            return int(tokens[1].replace('.', ''))
+        except:
+            return 0
     except:
         print "An error occurred while fetching url"
         return 0

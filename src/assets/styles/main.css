@@ -36,3 +36,8 @@ html {
   height: 50px;
   border: 1px solid black;
 }
+
+.cont > div {
+  display: inline-block;
+  width: 300px;
+}

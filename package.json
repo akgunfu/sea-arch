@@ -13,7 +13,7 @@
     "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --port 7081 --history-api-fallback",
     "production": "npm run build | npm run serve",
     "build": "./node_modules/webpack/bin/webpack.js --config webpack.config.js",
-    "serve": "FLASK_APP=server/app.py flask run --port=7082"
+    "serve": "FLASK_APP=server/app.py flask run --port=7082 --with-threads"
   },
   "dependencies": {
     "antd": "^3.13.6",

@@ -27,7 +27,7 @@ def get_image():
     image_path = root_path + '/src/assets/screenshots/screen.png'
     image = Image.open(image_path)
     width, height = image.size
-    cropped = image.crop((0, 380, width, height))
+    cropped = image.crop((0, 345, width, height))
     return cropped
 
 

@@ -16,15 +16,9 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def search():
     request_data = request.json
     question = request_data.get('question')
-    a = request_data.get('choice1')
-    b = request_data.get('choice2')
-    c = request_data.get('choice3')
-
-    r1 = search_counts(build_query([question, a]))
-    r2 = search_counts(build_query([question, b]))
-    r3 = search_counts(build_query([question, c]))
-
-    return response_success({'a1': r1, 'a2': r2, 'a3': r3})
+    choice = request_data.get('choice')
+    result = search_counts(build_query([question, choice]))
+    return response_success({'result': result})
 
 
 @app.route('/api/screen-shot', methods=['GET'])
