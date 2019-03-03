@@ -104,7 +104,8 @@ function Dashboard() {
       return {
         question: detectionResults.question,
         choice: detectionResults.choices[choice],
-        engine
+        engine,
+        nlp: detectionResults.nlp
       };
     }
 
@@ -123,6 +124,7 @@ function Dashboard() {
           break;
       }
     }
+
     function setSearchResults(data) {
       switch (engine) {
         case SEARCH_ENGINES.GOOGLE:

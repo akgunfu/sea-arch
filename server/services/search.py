@@ -28,6 +28,7 @@ def build_url(query, engine):
 def search_counts(word, engine):
     try:
         url = build_url(word, engine)
+        print url
         req = urllib2.Request(url, headers=header)
         response = urllib2.urlopen(req)
         html = response.read()
@@ -36,6 +37,7 @@ def search_counts(word, engine):
     except:
         print "An error occurred while fetching url"
         return 0
+
 
 def get_result(soup, engine):
     if engine == 'google':

@@ -18,7 +18,8 @@ def search():
     question = request_data.get('question')
     choice = request_data.get('choice')
     engine = request_data.get('engine')
-    result = search_counts(build_query([question, choice]), engine)
+    nlp = request_data.get('nlp')
+    result = search_counts(build_query([question, choice], nlp), engine)
     return response_success({'result': result})
 
 
@@ -26,7 +27,6 @@ def search():
 @cross_origin()
 def screen_shot():
     devices_result = os.popen('adb devices').read()
-    print devices_result
     # my device
     if 'HVY0218A09003965' in devices_result:
         os.system("adb exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
@@ -36,13 +36,11 @@ def screen_shot():
         return response_error("Device is not connected")
 
 
-
 @app.route('/api/ocr', methods=['GET'])
 @cross_origin()
 def extract_text():
     try:
         text = get_ocr_result()
-        print(text)
         return response_success(text)
     except ValueError as err:
         print 'Cannot detect'

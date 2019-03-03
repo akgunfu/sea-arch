@@ -2,11 +2,20 @@ import unicodedata
 import re
 
 
-def build_query(tokens):
+def build_query(tokens, nlp):
     query = ''
-    for token in tokens:
+    for i, token in enumerate(tokens):
+        if i == 0:
+            try:
+                is_important, important = check_important_text(token)
+                if is_important:
+                    token = important
+                else:
+                    token = nlp
+            except:
+                print 'Error trying to extract important text'
+
         token_str = get_token_string(token)
-        print token_str
         token_str = get_normalized_string(token_str)
 
         if query == '':
@@ -15,6 +24,15 @@ def build_query(tokens):
             query = query + '+' + token_str
 
     return query
+
+
+def check_important_text(question):
+    start_index = question.find('\"')
+    if start_index != -1:
+        end_index = question.find('\"', start_index + 1)
+        if start_index != -1 and end_index != -1:
+            return True, question[start_index + 1: end_index + 1]
+    return False, ""
 
 
 def get_normalized_string(token_str):

@@ -2,15 +2,13 @@ import os
 import sys
 from PIL import Image
 import pytesseract
-import unicodedata
+
+from morph import get_morphological_analysis
 
 
 def get_ocr_result():
     cropped = get_image()
     text = pytesseract.image_to_string(cropped, lang="tur", config='--psm 6')
-
-    # if type(text) is unicode:
-    #    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore')
 
     try:
         return detect_question(text, '?')
@@ -37,25 +35,26 @@ def detect_question(text, regex):
         if len(token) > 0:
             tokens.append(token)
 
-    print(tokens)
-
     if len(tokens) >= 2:
         question = tokens[0]
         choices = tokens[1]
+
+        try:
+            morph_result = get_morphological_analysis(question)
+        except:
+            morph_result = question
 
         choice_tokens = []
         for choice in choices.split('\n'):
             if len(choice) > 0:
                 choice_tokens.append(choice)
 
-        print(choice_tokens)
-
         if len(choice_tokens) >= 3:
             choice1 = choice_tokens[0]
             choice2 = choice_tokens[1]
             choice3 = choice_tokens[2]
 
-            return {'question': question, 'choices': {'a': choice1, 'b': choice2, 'c': choice3}}
+            return {'question': question, 'choices': {'a': choice1, 'b': choice2, 'c': choice3}, 'nlp': morph_result}
 
         else:
             raise ValueError('Bad text detection. (Cannot separate choices)')
