@@ -7,9 +7,9 @@ function Question(props) {
 
   return (
     <Card title="Detection Results">
-      <p>OCR</p>
+      <b>OCR</b>
       <div className="card-question">{question}</div>
-      <p>NLP</p>
+      <b>NLP</b>
       <div className="card-question">{nlp}</div>
       <div className="card-answers">
         <div className="card-answer">{choices.a || ""}</div>

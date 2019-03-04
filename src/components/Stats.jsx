@@ -14,15 +14,19 @@ function formatNumber(number) {
 function Stats(props) {
   const { results, src, fetching = false } = props;
 
-  const { a = 0, b = 0, c = 0 } = results;
+  const { a = {}, b = {}, c = {} } = results;
 
-  const rA = a / (a + b + c + 1);
-  const rB = b / (a + b + c + 1);
-  const rC = c / (a + b + c + 1);
+  const cA = a.count || 0;
+  const cB = b.count || 0;
+  const cC = c.count || 0;
+
+  const rA = cA / (cA + cB + cC + 1);
+  const rB = cB / (cA + cB + cC + 1);
+  const rC = cC / (cA + cB + cC + 1);
 
   return (
     <Spin spinning={fetching}>
-      <Card className="stats-container">
+      <Card className="stats-container" title="Search Counts">
         <img src={src} width={80} height={30} />
         <div className="stats">
           <Row className="stat-row">
@@ -32,7 +36,7 @@ function Stats(props) {
                 <br />
               </Col>
             </Col>
-            <Col span={3}>{formatNumber(a)}</Col>
+            <Col span={3}>{formatNumber(cA)}</Col>
           </Row>
           <Row className="stats">
             <Col span={3}>B</Col>
@@ -41,7 +45,7 @@ function Stats(props) {
                 <br />
               </Col>
             </Col>
-            <Col span={3}>{formatNumber(b)}</Col>
+            <Col span={3}>{formatNumber(cB)}</Col>
           </Row>
           <Row className="stats">
             <Col span={3}>C</Col>
@@ -50,7 +54,7 @@ function Stats(props) {
                 <br />
               </Col>
             </Col>
-            <Col span={3}>{formatNumber(c)}</Col>
+            <Col span={3}>{formatNumber(cC)}</Col>
           </Row>
         </div>
       </Card>

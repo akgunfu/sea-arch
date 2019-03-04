@@ -2,46 +2,30 @@ import React, { useState, useEffect } from "react";
 import History from "./History";
 import { api } from "../helpers/api";
 import * as config from "../config/client";
-import { EVENTS, SEARCH_ENGINES } from "./constants";
+import { SEARCH_ENGINES } from "./constants";
 
 import GOOGLE_LOGO from "../assets/images/google_logo.png";
-import YANDEX_LOGO from "../assets/images/yandex_logo.png";
-import RANDOM_LOGO from "../assets/images/random_logo.jpg";
-import YAHOO_LOGO from "../assets/images/yahoo_logo.png";
 
 import "../assets/styles/style";
 import { Card, Col, Row, message } from "antd";
 import Question from "./Question";
 import Stats from "./Stats";
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
+import Occurrence from "./Occurrence";
 
 function Dashboard() {
-  const [timeLine, setTimeLine] = useState([]);
   const [step, setStep] = useState(0);
 
   const [detectionResults, setDetectionResults] = useState({});
 
   const [searchResultsGoogle, setSearchResultsGoogle] = useState({});
-  const [searchResultsYahoo, setSearchResultsYahoo] = useState({});
-  const [searchResultsYandex, setSearchResultsYandex] = useState({});
+
   const [fetchingGoogle, setFetchingGoogle] = useState(false);
-  const [fetchingYahoo, setFetchingYahoo] = useState(false);
-  const [fetchingYandex, setFetchingYandex] = useState(false);
 
   const start = () => {
-    setTimeLine([EVENTS.STARTED]);
     setStep(1);
   };
 
-  const reset = () => {
-    setDetectionResults({});
-    setSearchResultsGoogle({});
-    setSearchResultsYandex({});
-    setSearchResultsYahoo({});
-  };
+  const reset = () => {};
 
   useEffect(() => {
     switch (step) {
@@ -56,8 +40,6 @@ function Dashboard() {
         break;
       case 3:
         search(SEARCH_ENGINES.GOOGLE);
-        search(SEARCH_ENGINES.YANDEX);
-        //search(SEARCH_ENGINES.YAHOO);
         break;
       default:
         break;
@@ -65,31 +47,23 @@ function Dashboard() {
   }, [step]);
 
   const capture = () => {
-    setTimeLine([...timeLine, EVENTS.REQUEST_CAPTURE]);
     api.get(config.endpoint + "screen-shot").then(response => {
       if (response.successful) {
-        setTimeLine([...timeLine, EVENTS.CAPTURE_SUCCESS]);
         setStep(2);
       } else {
-        setTimeLine([...timeLine, EVENTS.CAPTURE_ERROR, EVENTS.READY_FOR_NEXT]);
+        message.error("Failed to take screenshot");
         setStep(0);
       }
     });
   };
 
   const detect = () => {
-    setTimeLine([...timeLine, EVENTS.REQUEST_DETECTION]);
     api.get(config.endpoint + "ocr").then(response => {
       if (response.successful) {
-        setTimeLine([...timeLine, EVENTS.DETECTION_SUCCESS]);
         setDetectionResults(response.data);
         setStep(3);
       } else {
-        setTimeLine([
-          ...timeLine,
-          EVENTS.DETECTION_ERROR,
-          EVENTS.READY_FOR_NEXT
-        ]);
+        message.error("Failed to detect text");
         setStep(0);
       }
     });
@@ -97,14 +71,13 @@ function Dashboard() {
 
   const search = engine => {
     function getSearchPromise(choice) {
-      return api.post(config.endpoint + "search-combination", getRequestData(choice));
+      return api.post(config.endpoint + "search", getRequestData(choice));
     }
 
     function getRequestData(choice) {
       return {
         question: detectionResults.question,
         choice: detectionResults.choices[choice],
-        engine,
         nlp: detectionResults.nlp
       };
     }
@@ -113,12 +86,6 @@ function Dashboard() {
       switch (engine) {
         case SEARCH_ENGINES.GOOGLE:
           setFetchingGoogle(fetching);
-          break;
-        case SEARCH_ENGINES.YAHOO:
-          setFetchingYahoo(fetching);
-          break;
-        case SEARCH_ENGINES.YANDEX:
-          setFetchingYandex(fetching);
           break;
         default:
           break;
@@ -130,12 +97,6 @@ function Dashboard() {
         case SEARCH_ENGINES.GOOGLE:
           setSearchResultsGoogle(data);
           break;
-        case SEARCH_ENGINES.YAHOO:
-          setSearchResultsYahoo(data);
-          break;
-        case SEARCH_ENGINES.YANDEX:
-          setSearchResultsYandex(data);
-          break;
         default:
           break;
       }
@@ -145,76 +106,57 @@ function Dashboard() {
     Promise.all(["a", "b", "c"].map(getSearchPromise))
       .then(values => {
         setFetching(false);
+        setStep(0);
         const results = values.map(v => v.data.result);
+        const texts = values.map(v => v.data.texts);
+        const useds = values.map(v => v.data.used);
         setSearchResults({
-          a: results[0],
-          b: results[1],
-          c: results[2]
+          a: { count: results[0], text: texts[0], used: useds[0]},
+          b: { count: results[1], text: texts[1], used: useds[1] },
+          c: { count: results[2], text: texts[2], used: useds[2] }
         });
       })
       .catch(ignored => {
         setFetching(false);
-        message.error("An error occurred while searching " + engine);
+        message.error("Failed to search");
       });
   };
 
   return (
-    <Card title="Dashboard">
-      <Row>
-        <Col span={5}>
-          <History events={timeLine} onStart={start} />
-        </Col>
-        <Col span={19}>
-          <Card title="Search Results">
-            <Row>
-              <Col span={8}>
-                <Question detection={detectionResults} />
-              </Col>
-              <Col span={15} offset={1}>
-                <Row>
-                  <Col span={11}>
-                    <Stats
-                      results={searchResultsGoogle}
-                      src={GOOGLE_LOGO}
-                      fetching={fetchingGoogle}
-                    />
-                  </Col>
-                  <Col span={11} offset={1}>
-                    <Stats
-                      results={searchResultsYandex}
-                      src={YANDEX_LOGO}
-                      fetching={fetchingYandex}
-                    />
-                  </Col>
-                </Row>
-                /*
-                <Row>
-                  <Col span={11}>
-                    <Stats
-                      results={searchResultsYahoo}
-                      src={YAHOO_LOGO}
-                      fetching={fetchingYahoo}
-                    />
-                  </Col>
-                  <Col span={11} offset={1}>
-                    <Stats
-                      results={{
-                        a: getRandomInt(100),
-                        b: getRandomInt(100),
-                        c: getRandomInt(100)
-                      }}
-                      src={RANDOM_LOGO}
-                      fetching={false}
-                    />
-                  </Col>
-                </Row>
-                */
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-      </Row>
-    </Card>
+    <Row>
+      <Col span={5}>
+        <Row>
+          <History onStart={start} spinning={step !== 0} />
+        </Row>
+        <Row>
+          <Question detection={detectionResults} />
+        </Row>
+        <Row>
+          <Stats
+            results={searchResultsGoogle}
+            src={GOOGLE_LOGO}
+            fetching={fetchingGoogle}
+          />
+        </Row>
+      </Col>
+      <Col span={19}>
+        <Card title="Search Results">
+          <Row>
+            <Col span={24}>
+              <Row>
+                <Col>
+                  <Occurrence
+                    detection={detectionResults}
+                    results={searchResultsGoogle}
+                    fetching={fetchingGoogle}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Card>
+      </Col>
+    </Row>
   );
 }
 
