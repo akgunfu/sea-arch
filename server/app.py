@@ -2,7 +2,7 @@ import os
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS, cross_origin
 
-from services.search import search_counts
+from services.search import search_combination_counts
 from services.query import build_query
 from services.ocr import get_ocr_result
 
@@ -11,15 +11,19 @@ CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
-@app.route('/api/search', methods=['POST'])
+@app.route('/api/search-combination', methods=['POST'])
 @cross_origin()
-def search():
+def search_combination():
     request_data = request.json
     question = request_data.get('question')
     choice = request_data.get('choice')
     engine = request_data.get('engine')
     nlp = request_data.get('nlp')
-    result = search_counts(build_query([question, choice], nlp), engine)
+    result = 0
+    try:
+        result = search_combination_counts(build_query([choice, question], nlp), engine)
+    except Exception as err:
+        print "######"  + str(err)
     return response_success({'result': result})
 
 

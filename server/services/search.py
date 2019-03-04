@@ -25,17 +25,18 @@ def build_url(query, engine):
     raise ValueError('No configurations found for engine')
 
 
-def search_counts(word, engine):
+def search_combination_counts(word, engine):
     try:
         url = build_url(word, engine)
+        url = url.encode("utf-8")
         print url
         req = urllib2.Request(url, headers=header)
         response = urllib2.urlopen(req)
         html = response.read()
         soup = BeautifulSoup(html, features="lxml")
         return get_result(soup, engine)
-    except:
-        print "An error occurred while fetching url"
+    except Exception as err:
+        print "An error occurred while fetching url: " + str(err)
         return 0
 
 

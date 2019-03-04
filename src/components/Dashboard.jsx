@@ -97,7 +97,7 @@ function Dashboard() {
 
   const search = engine => {
     function getSearchPromise(choice) {
-      return api.post(config.endpoint + "search", getRequestData(choice));
+      return api.post(config.endpoint + "search-combination", getRequestData(choice));
     }
 
     function getRequestData(choice) {
