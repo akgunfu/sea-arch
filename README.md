@@ -7,6 +7,7 @@ Answer fetcher for multiple choice quiz apps
 - Node.js (for React)
 - Android SDK (for adb)
 - Java 8 or higher (for JVM)
+- Tesseract (for text detection)
 
 ## Setup
 
