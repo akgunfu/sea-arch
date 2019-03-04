@@ -57,7 +57,7 @@ function Dashboard() {
       case 3:
         search(SEARCH_ENGINES.GOOGLE);
         search(SEARCH_ENGINES.YANDEX);
-        search(SEARCH_ENGINES.YAHOO);
+        //search(SEARCH_ENGINES.YAHOO);
         break;
       default:
         break;
@@ -187,6 +187,7 @@ function Dashboard() {
                     />
                   </Col>
                 </Row>
+                /*
                 <Row>
                   <Col span={11}>
                     <Stats
@@ -207,6 +208,7 @@ function Dashboard() {
                     />
                   </Col>
                 </Row>
+                */
               </Col>
             </Row>
           </Card>
