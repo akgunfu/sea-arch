@@ -20,7 +20,9 @@ function Matcher(props) {
         return (
           <p className="entry">
             {words.map(word => {
-              if (word.includes(keyword)) {
+              if (
+                word.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
+              ) {
                 return (
                   <Highlighter
                     highlightClassName={type}
@@ -29,7 +31,9 @@ function Matcher(props) {
                   />
                 );
               }
-              if (word.includes(keyword2)) {
+              if (
+                word.toLocaleLowerCase().includes(keyword2.toLocaleLowerCase())
+              ) {
                 return (
                   <Highlighter
                     highlightClassName={type2}
@@ -38,7 +42,9 @@ function Matcher(props) {
                   />
                 );
               }
-              if (word.includes(keyword3)) {
+              if (
+                word.toLocaleLowerCase().includes(keyword3.toLocaleLowerCase())
+              ) {
                 return (
                   <Highlighter
                     highlightClassName={type3}
@@ -47,7 +53,11 @@ function Matcher(props) {
                   />
                 );
               }
-              if (questionKeywords.some(keyword => word.includes(keyword))) {
+              if (
+                questionKeywords.some(keyword =>
+                  word.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
+                )
+              ) {
                 return (
                   <Highlighter
                     highlightClassName="question-keyword-match"
