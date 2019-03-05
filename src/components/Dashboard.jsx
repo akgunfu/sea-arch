@@ -124,7 +124,7 @@ function Dashboard() {
 
   return (
     <Row>
-      <Col span={5}>
+      <Col span={4}>
         <Row>
           <History onStart={start} spinning={step !== 0} />
         </Row>
@@ -139,7 +139,7 @@ function Dashboard() {
           />
         </Row>
       </Col>
-      <Col span={19}>
+      <Col span={20}>
         <Card title="Search Results">
           <Row>
             <Col span={24}>

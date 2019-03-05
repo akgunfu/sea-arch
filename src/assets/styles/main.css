@@ -7,10 +7,6 @@
   font-size: 10px;
 }
 
-b {
-  font-size: 12px;
-}
-
 .card-answers {
   margin-top: 3px;
 }
@@ -43,13 +39,89 @@ b {
   background-color: chartreuse;
 }
 
-.occurrences {
-  border: 1px solid #e9e9e9;
-  font-size: 11px;
+.answer-keyword-match-a {
+  padding: 0 2px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #1789fc;
 }
 
-.highlight {
+.answer-keyword-match-b {
+  padding: 0 2px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #04db61;
+}
+
+.answer-keyword-match-c {
+  padding: 0 2px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #bf0603;
+}
+
+.question-keyword-match {
+  padding: 0 2px;
+  border-radius: 5px;
   font-weight: bold;
   color: #ffffff;
   background-color: black;
+}
+
+.occurrences-a {
+  background-color: #688ea9;
+  border: 3px solid #1789fc;
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 0 2px;
+}
+
+.occurrences-b {
+  background-color: #bfee9c;
+  border: 3px solid #04db61;
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 0 2px;
+  margin-top: 10px;
+}
+
+.occurrences-c {
+  background-color: #ffadb5;
+  border: 3px solid #bf0603;
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 0 2px;
+  margin-top: 10px;
+}
+
+.match-container p {
+  line-height: 20px;
+  margin: 0 10px 5px !important;
+  display: inline-block !important;
+}
+
+.entry {
+  background-color: white;
+}
+
+.search-title {
+  text-align: center;
+}
+
+.a {
+  background-color: #1789fc;
+  color: white;
+}
+
+.b {
+  background-color: #04db61;
+  color: white;
+}
+
+.c {
+  background-color: #bf0603;
+  color: white;
 }
