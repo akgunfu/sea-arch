@@ -18,6 +18,7 @@ def add_choice(query, choice):
     if choice is not None:
         choice = beautify(choice)
         splits = choice.split(WHITE_SPACE)
+        splits = filter(lambda x: x not in ['-', ',', '.', '+', '/', '*', '#', '!', '?'], splits)
         choice_str = PLUS.join(splits)
         choice_str = enclose_quote(choice_str)
         if len(query) > 0:
