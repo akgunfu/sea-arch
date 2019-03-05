@@ -4,6 +4,7 @@ import Highlighter from "react-highlight-words";
 function Matcher(props) {
   const {
     questionKeywords = [],
+    nlpKeywords = [],
     keyword,
     type,
     texts = [],
@@ -54,14 +55,27 @@ function Matcher(props) {
                 );
               }
               if (
-                questionKeywords.some(keyword =>
-                  word.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
+                questionKeywords.some(keyword_ =>
+                  word.toLocaleLowerCase().includes(keyword_.toLocaleLowerCase())
                 )
               ) {
                 return (
                   <Highlighter
                     highlightClassName="question-keyword-match"
                     searchWords={[...questionKeywords]}
+                    textToHighlight={word + " "}
+                  />
+                );
+              }
+              if (
+                nlpKeywords.some(keyword_ =>
+                  word.toLocaleLowerCase().includes(keyword_.toLocaleLowerCase())
+                )
+              ) {
+                return (
+                  <Highlighter
+                    highlightClassName="question-keyword-match"
+                    searchWords={[...nlpKeywords]}
                     textToHighlight={word + " "}
                   />
                 );

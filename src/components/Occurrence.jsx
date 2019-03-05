@@ -5,7 +5,7 @@ import Matcher from "./Matcher";
 function Occurrence(props) {
   const { results, detection, fetching = false } = props;
 
-  const { choices = {} } = detection;
+  const { choices = {}, nlp = "" } = detection;
 
   const { a = {}, b = {}, c = {} } = results;
 
@@ -23,6 +23,7 @@ function Occurrence(props) {
           questionKeywords={[
             ...(a.used || "").split(" ").filter(a => a.length > 1)
           ]}
+          nlpKeywords={[...(nlp || "").split(" ").filter(a => a.length > 2)]}
           keyword={choices.a || " "}
           texts={tA}
           type="answer-keyword-match-a"
@@ -40,6 +41,7 @@ function Occurrence(props) {
           questionKeywords={[
             ...(b.used || "").split(" ").filter(a => a.length > 1)
           ]}
+          nlpKeywords={[...(nlp || "").split(" ").filter(a => a.length > 2)]}
           keyword={choices.b || " "}
           texts={tB}
           type="answer-keyword-match-b"
@@ -57,6 +59,7 @@ function Occurrence(props) {
           questionKeywords={[
             ...(c.used || "").split(" ").filter(a => a.length > 1)
           ]}
+          nlpKeywords={[...(nlp || "").split(" ").filter(a => a.length > 2)]}
           keyword={choices.c || " "}
           texts={tC}
           type="answer-keyword-match-c"
