@@ -10,7 +10,7 @@ parser.add_argument("-c", "--count", dest="count",
 
 args = parser.parse_args()
 
-limit = 1
+limit = 2
 if args.count:
     limit = args.count
 

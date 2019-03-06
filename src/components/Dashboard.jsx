@@ -84,7 +84,7 @@ function Dashboard() {
       .then(values => {
         setFetchingImagesGoogle(false);
         setStep(0);
-        setImageResultsGoogle(values);
+        setImageResultsGoogle(values.data);
       })
       .catch(ignored => {
         setFetchingImagesGoogle(false);
@@ -141,11 +141,18 @@ function Dashboard() {
             fetching={fetchingGoogle}
           />
         </Row>
+        <Row>
+          {(imageResultsGoogle.result || [])
+            .filter(img => img["keyword-index"] === 0)
+            .map(imRes => {
+              return <img src={imRes.url} alt={0} width={200} height={200} />;
+            })}
+        </Row>
       </Col>
       <Col span={20}>
         <Card title="Search Results">
           <Row>
-            <Col span={20}>
+            <Col span={24}>
               <Occurrence
                 detection={detectionResults}
                 results={searchResultsGoogle}
