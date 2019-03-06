@@ -1,5 +1,5 @@
 import text_search
 import query
 import ocr
-import morph
+import morphology
 import image_search

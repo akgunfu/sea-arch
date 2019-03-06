@@ -40,7 +40,6 @@ def get_result_count(soup):
         div = soup.find(id="resultStats")
         result_str = unidecode(div.text)
         tokens = result_str.split(' ')
-
         try:
             return int(tokens[1].replace('.', ''))
         except:

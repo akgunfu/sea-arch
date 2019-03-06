@@ -5,6 +5,8 @@ WHITE_SPACE = " "
 NEWLINE = "\n"
 PLUS = "+"
 
+SYMBOLS = ['-', ',', '.', '+', '/', '*', '#', '!', '?']
+
 
 def build_query(question, choices, nlp):
     query = ''
@@ -18,7 +20,7 @@ def add_choice(query, choice):
     if choice is not None:
         choice = beautify(choice)
         splits = choice.split(WHITE_SPACE)
-        splits = filter(lambda x: x not in ['-', ',', '.', '+', '/', '*', '#', '!', '?'], splits)
+        splits = filter(lambda x: x not in SYMBOLS, splits)
         choice_str = PLUS.join(splits)
         choice_str = enclose_quote(choice_str)
         if len(query) > 0:
@@ -76,13 +78,17 @@ def find_uppercase_words(question):
     keywords = []
     try:
         for i, token in enumerate(tokens):
-            if token[0].isupper() or token[0].isdigit():
-                if i == 0:
-                    if tokens[1][0].isupper():
+            try:
+                if token[0].isupper() or token[0].isdigit():
+                    if i == 0:
+                        if tokens[1][0].isupper():
+                            keywords.append(token)
+                    else:
                         keywords.append(token)
-                else:
-                    keywords.append(token)
-    except:
+            except:
+                pass
+    except Exception as err:
+        print str(err)
         print 'Uppercase text search failed'
     found = len(keywords) > 1
     uppercase = WHITE_SPACE.join(keywords)
