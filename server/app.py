@@ -41,6 +41,8 @@ def search_images():
     query_a, used = build_query(question, [a], nlp)
     query_b, used = build_query(question, [b], nlp)
     query_c, used = build_query(question, [c], nlp)
+    used = used.replace("'", ' ')
+    used = used.replace(",", ' ')
     result = do_search_images([used, query_a, query_b, query_c])
     return response_success({'result': result})
 
