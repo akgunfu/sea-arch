@@ -27,7 +27,7 @@ def get_morphological_analysis(question):
 def get_shell_command(question):
     current_path = sys.path[0]
     root_path = os.path.abspath(os.path.join(current_path, os.pardir))
-    zemberek_path = root_path + '/server/services/nlp/zemberek.py'
+    zemberek_path = root_path + '/server/services/scripts/zemberek.py'
     question = question.replace("'", "")
     command = "python " + zemberek_path + " -s '" + question + "'"
     return command

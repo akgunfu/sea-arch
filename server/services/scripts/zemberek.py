@@ -10,7 +10,7 @@ parser.add_argument("-s", "--sentence", dest="sentence", type=lambda s: unicode(
 args = parser.parse_args()
 
 # Relative path to Zemberek .jar
-ZEMBEREK_PATH = './server/services/nlp/bin/zemberek-full.jar'
+ZEMBEREK_PATH = './server/services/scripts/bin/zemberek-full.jar'
 
 # Start the JVM
 jp.startJVM(jp.getDefaultJVMPath(), '-ea', '-Djava.class.path=%s' % (ZEMBEREK_PATH))

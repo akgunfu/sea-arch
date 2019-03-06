@@ -2,7 +2,8 @@ import os
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS, cross_origin
 
-from services.search import do_search
+from services.text_search import do_search_texts
+from services.image_search import do_search_images
 from services.query import build_query
 from services.ocr import get_ocr_result
 
@@ -14,13 +15,34 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/api/search', methods=['POST'])
 @cross_origin()
 def search():
+    # get data from request
     request_data = request.json
     question = request_data.get('question')
-    choice = request_data.get('choice')
     nlp = request_data.get('nlp')
+    choice = request_data.get('choice')
+    # do action
     search_query, used = build_query(question, [choice], nlp)
-    result, text = do_search(search_query, choice)
+    result, text = do_search_texts(search_query, choice)
     return response_success({'result': result, 'texts': text, 'used': used})
+
+
+@app.route('/api/search-images', methods=['POST'])
+@cross_origin()
+def search_images():
+    # get data from request
+    request_data = request.json
+    question = request_data.get('question')
+    nlp = request_data.get('nlp')
+    choices = request_data.get('choices')
+    a = choices.get('a')
+    b = choices.get('b')
+    c = choices.get('c')
+    # do action
+    query_a, used = build_query(question, [a], nlp)
+    query_b, used = build_query(question, [b], nlp)
+    query_c, used = build_query(question, [c], nlp)
+    result = do_search_images([used, query_a, query_b, query_c])
+    return response_success({'result': result})
 
 
 @app.route('/api/screen-shot', methods=['GET'])

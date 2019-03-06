@@ -10,7 +10,7 @@ header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)',
           'Connection': 'keep-alive'}
 
 
-def do_search(query, keyword):
+def do_search_texts(query, keyword):
     try:
         url = build_url(query)
         url = url.encode("utf-8")
