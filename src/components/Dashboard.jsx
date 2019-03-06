@@ -6,7 +6,7 @@ import * as config from "../config/client";
 import GOOGLE_LOGO from "../assets/images/google_logo.png";
 
 import "../assets/styles/style";
-import { Card, Col, Row, message } from "antd";
+import { Card, Col, Row, message, Spin } from "antd";
 import Question from "./Question";
 import Stats from "./Stats";
 import Occurrence from "./Occurrence";
@@ -142,11 +142,13 @@ function Dashboard() {
           />
         </Row>
         <Row>
-          {(imageResultsGoogle.result || [])
-            .filter(img => img["keyword-index"] === 0)
-            .map(imRes => {
-              return <img src={imRes.url} alt={0} width={200} height={200} />;
-            })}
+          <Spin spinning={fetchingImagesGoogle}>
+            {(imageResultsGoogle.result || [])
+              .filter(img => img["keyword-index"] === 0)
+              .map(imRes => {
+                return <img className="result-image" src={imRes.url} alt={0} />;
+              })}
+          </Spin>
         </Row>
       </Col>
       <Col span={20}>
@@ -158,6 +160,7 @@ function Dashboard() {
                 results={searchResultsGoogle}
                 imageResults={imageResultsGoogle}
                 fetching={fetchingGoogle}
+                fetchingImages={fetchingImagesGoogle}
               />
             </Col>
           </Row>

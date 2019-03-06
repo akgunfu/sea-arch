@@ -3,7 +3,13 @@ import { Col, Row, Spin } from "antd";
 import Matcher from "./Matcher";
 
 function Occurrence(props) {
-  const { results, imageResults, detection, fetching = false } = props;
+  const {
+    results,
+    imageResults,
+    detection,
+    fetching = false,
+    fetchingImages = false
+  } = props;
 
   const { choices = {}, nlp = "" } = detection;
 
@@ -35,14 +41,18 @@ function Occurrence(props) {
               </Col>
             </Row>
             <Row>
-              <Col span={1}>
-                {(imageResults.result || [])
-                  .filter(img => img["keyword-index"] === i + 1)
-                  .map(imRes => {
-                    return <img src={imRes.url} alt={i} width={100} height={100}/>;
-                  })}
+              <Col span={3}>
+                <Spin spinning={fetchingImages}>
+                  {(imageResults.result || [])
+                    .filter(img => img["keyword-index"] === i + 1)
+                    .map(imRes => {
+                      return (
+                        <img className="result-image" src={imRes.url} alt={i} />
+                      );
+                    })}
+                </Spin>
               </Col>
-              <Col span={22} offset={1}>
+              <Col span={21} offset={0}>
                 <Matcher
                   questionKeywords={questionKeywords}
                   nlpKeywords={nlpKeywords}

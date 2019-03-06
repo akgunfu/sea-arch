@@ -41,7 +41,7 @@
 
 .answer-keyword-match-a {
   padding: 0 5px;
-  font-size: 16px;
+  font-size: 15px;
   border-radius: 5px;
   font-weight: bold;
   color: #ffffff;
@@ -50,7 +50,7 @@
 
 .answer-keyword-match-b {
   padding: 0 5px;
-  font-size: 16px;
+  font-size: 15px;
   border-radius: 5px;
   font-weight: bold;
   color: #ffffff;
@@ -59,7 +59,7 @@
 
 .answer-keyword-match-c {
   padding: 0 5px;
-  font-size: 16px;
+  font-size: 15px;
   border-radius: 5px;
   font-weight: bold;
   color: #ffffff;
@@ -78,7 +78,7 @@
   background-color: #688ea9;
   border: 3px solid #1789fc;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 12px;
   padding: 0 2px;
 }
 
@@ -86,7 +86,7 @@
   background-color: #bfee9c;
   border: 3px solid #04db61;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 12px;
   padding: 0 2px;
   margin-top: 10px;
 }
@@ -95,7 +95,7 @@
   background-color: #ffadb5;
   border: 3px solid #bf0603;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 12px;
   padding: 0 2px;
   margin-top: 10px;
 }
@@ -127,4 +127,11 @@
 .c {
   background-color: #bf0603;
   color: white;
+}
+
+.result-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+  border: 1px solid #ffffff;
 }
