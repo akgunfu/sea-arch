@@ -24,6 +24,7 @@ const markMatched = (word, keywords, className) => {
 
 function Matcher(props) {
   const {
+    baseKeywords = [],
     questionKeywords = [],
     nlpKeywords = [],
     occurrences = [],
@@ -52,6 +53,11 @@ function Matcher(props) {
                 "question-keyword-match"
               );
               _word = markMatched(_word, nlpKeywords, "question-keyword-match");
+              _word = markMatched(
+                _word,
+                baseKeywords,
+                "question-keyword-match"
+              );
 
               return _word;
             })}

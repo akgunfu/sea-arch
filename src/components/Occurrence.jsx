@@ -11,7 +11,7 @@ function Occurrence(props) {
     fetchingImages = false
   } = props;
 
-  const { choices = {}, nlp = "" } = detection;
+  const { choices = {}, nlp = "", question = "" } = detection;
 
   return (
     <Spin spinning={fetching}>
@@ -24,6 +24,9 @@ function Occurrence(props) {
         const selfOccurrences = selfSearchResult.text || [];
         const selfUsedForm = selfSearchResult.used || "";
 
+        const baseKeywords = [
+          ...question.split(" ").filter(token => token.length > 1)
+        ];
         const questionKeywords = [
           ...selfUsedForm.split(" ").filter(token => token.length > 1)
         ];
@@ -54,6 +57,7 @@ function Occurrence(props) {
               </Col>
               <Col span={21} offset={0}>
                 <Matcher
+                  baseKeywords={baseKeywords}
                   questionKeywords={questionKeywords}
                   nlpKeywords={nlpKeywords}
                   occurrences={selfOccurrences}
