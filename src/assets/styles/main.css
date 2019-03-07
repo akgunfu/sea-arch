@@ -135,3 +135,30 @@
   margin-bottom: 15px;
   border: 1px solid #ffffff;
 }
+
+.spaced {
+  margin-bottom: 15px !important;
+}
+
+.reverse-results-container {
+  padding: 20px;
+  background-color: #ecfff8;
+}
+
+.reverse-results-container h1 {
+  font-size: 30px;
+  border: 3px solid black;
+}
+
+.reverse-top-results {
+  border: 1px solid #e9e9e9;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.reverse-occurrence-results {
+  border: 1px solid #e9e9e9;
+  font-size: 15px;
+  padding: 15px;
+}

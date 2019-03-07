@@ -10,9 +10,12 @@ import { Card, Col, Row, message, Spin } from "antd";
 import Question from "./Question";
 import Stats from "./Stats";
 import Occurrence from "./Occurrence";
+import ReverseResults from "./ReverseResults";
 
 function Dashboard() {
   const [step, setStep] = useState(0);
+
+  const [mode, setMode] = useState(0);
 
   const [detectionResults, setDetectionResults] = useState({});
 
@@ -20,9 +23,13 @@ function Dashboard() {
 
   const [imageResultsGoogle, setImageResultsGoogle] = useState({});
 
+  const [reverseResultsGoogle, setReverseResultsGoogle] = useState({});
+
   const [fetchingGoogle, setFetchingGoogle] = useState(false);
 
   const [fetchingImagesGoogle, setFetchingImagesGoogle] = useState(false);
+
+  const [fetchingReverse, setFetchingReverse] = useState(false);
 
   useEffect(() => {
     switch (step) {
@@ -30,7 +37,7 @@ function Dashboard() {
         reset();
         break;
       case 1:
-        capture();
+        capture(2);
         break;
       case 2:
         detect();
@@ -39,21 +46,33 @@ function Dashboard() {
         search_images();
         search();
         break;
+      case 4:
+        capture(5);
+        break;
+      case 5:
+        reverse_search();
+        break;
       default:
         break;
     }
   }, [step]);
 
-  const start = () => {
+  const startSearch = () => {
+    setMode(0);
     setStep(1);
+  };
+
+  const startReverseSearch = () => {
+    setMode(1);
+    setStep(4);
   };
 
   const reset = () => {};
 
-  const capture = () => {
+  const capture = nextStep => {
     api.get(config.endpoint + "screen-shot").then(response => {
       if (response.successful) {
-        setStep(2);
+        setStep(nextStep);
       } else {
         message.error("Failed to take screenshot");
         setStep(0);
@@ -88,6 +107,7 @@ function Dashboard() {
       })
       .catch(ignored => {
         setFetchingImagesGoogle(false);
+        setStep(0);
         message.error("Failed to image search");
       });
   };
@@ -121,7 +141,24 @@ function Dashboard() {
       })
       .catch(ignored => {
         setFetchingGoogle(false);
+        setStep(0);
         message.error("Failed to search");
+      });
+  };
+
+  const reverse_search = () => {
+    setFetchingReverse(true);
+    api
+      .get(config.endpoint + "reverse-image-search")
+      .then(values => {
+        setReverseResultsGoogle(values.data.result);
+        setFetchingReverse(false);
+        setStep(0);
+      })
+      .catch(ignored => {
+        message.error("Failed to image search");
+        setFetchingReverse(false);
+        setStep(0);
       });
   };
 
@@ -129,7 +166,11 @@ function Dashboard() {
     <Row>
       <Col span={4}>
         <Row>
-          <History onStart={start} spinning={step !== 0} />
+          <History
+            onStartSearch={startSearch}
+            onStartReverseSearch={startReverseSearch}
+            spinning={step !== 0}
+          />
         </Row>
         <Row>
           <Question detection={detectionResults} />
@@ -153,17 +194,29 @@ function Dashboard() {
       </Col>
       <Col span={20}>
         <Card title="Search Results">
-          <Row>
-            <Col span={24}>
-              <Occurrence
-                detection={detectionResults}
-                results={searchResultsGoogle}
-                imageResults={imageResultsGoogle}
-                fetching={fetchingGoogle}
-                fetchingImages={fetchingImagesGoogle}
-              />
-            </Col>
-          </Row>
+          {mode === 0 && (
+            <Row>
+              <Col span={24}>
+                <Occurrence
+                  detection={detectionResults}
+                  results={searchResultsGoogle}
+                  imageResults={imageResultsGoogle}
+                  fetching={fetchingGoogle}
+                  fetchingImages={fetchingImagesGoogle}
+                />
+              </Col>
+            </Row>
+          )}
+          {mode === 1 && (
+            <Row>
+              <Col span={24}>
+                <ReverseResults
+                  results={reverseResultsGoogle}
+                  fetching={fetchingReverse}
+                />
+              </Col>
+            </Row>
+          )}
         </Card>
       </Col>
     </Row>

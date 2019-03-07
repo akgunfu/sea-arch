@@ -4,6 +4,7 @@ from flask_cors import CORS, cross_origin
 
 from services.text_search import do_search_texts
 from services.image_search import do_search_images
+from services.reverse_image_search import do_reverse_image_search
 from services.query import build_query
 from services.ocr import get_ocr_result
 
@@ -45,6 +46,12 @@ def search_images():
     used = used.replace(",", ' ')
     result = do_search_images([used, query_a, query_b, query_c])
     return response_success({'result': result})
+
+@app.route('/api/reverse-image-search', methods=['GET'])
+@cross_origin()
+def reverse_image_search():
+    prediction, top, preview = do_reverse_image_search();
+    return response_success({'result': {'prediction': prediction, 'top': top, 'preview': preview}})
 
 
 @app.route('/api/screen-shot', methods=['GET'])
