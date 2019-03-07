@@ -2,6 +2,7 @@ import os
 import sys
 import requests
 from bs4 import BeautifulSoup
+from unidecode import unidecode
 
 SCREEN_CAPTURE_PATH = '/src/assets/screenshots/screen.png'
 
@@ -43,12 +44,12 @@ def get_result(soup):
                 prediction = our_child.select_one("a").text
             except:
                 print 'top failed'
-    	top_spans = map(lambda x: x.text, top_spans)
-    	previews = map(lambda x: x.text, previews)
+    	top_spans = map(lambda x: unidecode(x.text), top_spans)
+    	previews = map(lambda x: unidecode(x.text), previews)
     except Exception as err:
     	print str(err)
     	print 'Reverse image search parse error'
 
-    return prediction, top_spans, previews
+    return unidecode(prediction), top_spans, previews
 
 
