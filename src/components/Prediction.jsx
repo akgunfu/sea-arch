@@ -220,7 +220,7 @@ function Prediction(props) {
 
   const total = Object.values(calc)
     .map(c => c.mixed)
-    .reduce((a, b) => a + b, 0);
+    .reduce((a, b) => a + b, 1);
 
   console.log(info);
   console.log(calc);
