@@ -26,7 +26,9 @@ def get_image(start=345):
     image_path = root_path + SCREEN_CAPTURE_PATH
     image = Image.open(image_path)
     width, height = image.size
-    cropped = image.crop((0, start, width, height))
+    gray = image.convert('L')
+    cropped = gray.crop((85, start, width-85, 5*height/7))
+    cropped = cropped.point(lambda x: 0 if x<210 else 255, '1')
     return cropped
 
 
