@@ -1,7 +1,6 @@
 import React from "react";
 import { Col, Row, Spin } from "antd";
 import Matcher from "./Matcher";
-import Prediction from "./Prediction";
 
 function Occurrence(props) {
   const {
@@ -16,7 +15,6 @@ function Occurrence(props) {
 
   return (
     <Spin spinning={fetching}>
-      <Prediction results={results} detection={detection} />
       {["a", "b", "c"].map((choice, i) => {
         const containerClass = "occurrences-" + choice;
         const titleClass = "search-title " + choice;

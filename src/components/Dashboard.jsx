@@ -3,14 +3,12 @@ import History from "./History";
 import { api } from "../helpers/api";
 import * as config from "../config/client";
 
-import GOOGLE_LOGO from "../assets/images/google_logo.png";
-
 import "../assets/styles/style";
 import { Card, Col, Row, message, Spin } from "antd";
 import Question from "./Question";
-import Stats from "./Stats";
 import Occurrence from "./Occurrence";
 import ReverseResults from "./ReverseResults";
+import Prediction from "./Prediction";
 
 function Dashboard() {
   const [step, setStep] = useState(0);
@@ -34,7 +32,6 @@ function Dashboard() {
   useEffect(() => {
     switch (step) {
       case 0:
-        reset();
         break;
       case 1:
         capture(2);
@@ -58,16 +55,22 @@ function Dashboard() {
   }, [step]);
 
   const startSearch = () => {
+    reset();
     setMode(0);
     setStep(1);
   };
 
   const startReverseSearch = () => {
+    reset();
     setMode(1);
     setStep(4);
   };
 
-  const reset = () => {};
+  const reset = () => {
+    setSearchResultsGoogle({});
+    setReverseResultsGoogle({});
+    setImageResultsGoogle({});
+  };
 
   const capture = nextStep => {
     api.get(config.endpoint + "screen-shot").then(response => {
@@ -176,10 +179,9 @@ function Dashboard() {
           <Question detection={detectionResults} />
         </Row>
         <Row>
-          <Stats
+          <Prediction
             results={searchResultsGoogle}
-            src={GOOGLE_LOGO}
-            fetching={fetchingGoogle}
+            detection={detectionResults}
           />
         </Row>
         <Row>
