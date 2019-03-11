@@ -1,7 +1,10 @@
 node_modules
 build
+downloads
 *.swp
 *.pem
 *.pyc
 __pycache__
 .cache
+.idea/
+downloads/
