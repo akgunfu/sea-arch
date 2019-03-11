@@ -43,7 +43,7 @@ def add_question(query, question, nlp):
 
 
 def process_question(question, nlp):
-    has_keyword, keyword = extract_keyword(question)
+    has_keyword, keyword = extract_keyword(question, nlp)
     if has_keyword:
         question = keyword
     else:
@@ -51,11 +51,11 @@ def process_question(question, nlp):
     return question
 
 
-def extract_keyword(question):
+def extract_keyword(question, nlp):
     found_quote, quote = find_quote(question)
     if found_quote:
         return found_quote, quote
-    found_upper, upper = find_uppercase_words(question)
+    found_upper, upper = find_uppercase_words(question, nlp)
     if found_upper:
         return found_upper, upper
     return False, question
@@ -73,7 +73,7 @@ def find_quote(question):
     return False, question
 
 
-def find_uppercase_words(question):
+def find_uppercase_words(question, nlp):
     tokens = question.split(WHITE_SPACE)
     keywords = []
     try:
@@ -90,10 +90,28 @@ def find_uppercase_words(question):
     except Exception as err:
         print str(err)
         print 'Uppercase text search failed'
-    found = len(keywords) > 1
-    uppercase = WHITE_SPACE.join(keywords)
+    found = len(keywords) > 0
+    merged = merge_keywords(keywords, nlp)
+    uppercase = WHITE_SPACE.join(merged)
     return found, uppercase
 
+
+def merge_keywords(keywords, nlp):
+    nlp = unidecode(nlp)
+    nlp = filter(lambda x: len(x) > 1, nlp.split(" "))
+
+    _keywords = []
+    for keyword in keywords:
+        _keywords.append(keyword)
+
+    for nlp_keyword in reversed(nlp):
+        if len(_keywords) < 5:
+            normalized = WHITE_SPACE.join(keywords).lower()
+            normalized = normalized.replace("'", "")
+            if not nlp_keyword.lower() in normalized:
+                _keywords.append(nlp_keyword)
+
+    return _keywords
 
 def get_normalized_string(token_str):
     token_str = unidecode(token_str)

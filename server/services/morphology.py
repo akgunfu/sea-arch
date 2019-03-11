@@ -24,9 +24,9 @@ def get_morphological_analysis(question):
         analysis_result = shell_result.split(ROW_SPLIT)
 
         words = get_words(analysis_result)
-        words = filter_words(words, FIRST_BLOCK)
-        words = filter_words(words, SECOND_BLOCK)
-        words = filter_words(words, THIRD_BLOCK, 8)
+        words = filter_words(words, FIRST_BLOCK, True)
+        words = filter_words(words, SECOND_BLOCK, False)
+        words = filter_words(words, THIRD_BLOCK, False, 8)
 
         return WHITESPACE.join(map(lambda x: x['stem'], words))
     except Exception as e:
@@ -71,9 +71,9 @@ def get_word_analysis(word_analysis):
 
 
 # Filters tokens depending on blocked list and max size constraint
-def filter_words(words, blocked, max_size=7):
+def filter_words(words, blocked, override, max_size=7):
     _words = []
-    if len(words) > max_size:
+    if len(words) > max_size or override:
         for word in words:
             is_blocked = get_if_blocked(word['types'], blocked)
             if not is_blocked:
