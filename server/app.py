@@ -21,9 +21,10 @@ def search():
     question = request_data.get('question')
     nlp = request_data.get('nlp')
     choice = request_data.get('choice')
+    choices = request_data.get('choices')
     # do action
     search_query, used = build_query(question, [choice], nlp)
-    result, text = do_search_texts(search_query, choice)
+    result, text = do_search_texts(search_query, choice, choices)
     return response_success({'result': result, 'texts': text, 'used': used})
 
 

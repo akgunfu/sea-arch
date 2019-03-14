@@ -13,7 +13,7 @@ const findMean = (indices = []) => {
 
 const deviation = (indices = []) => {
   if (indices.length < 2) {
-    return 0;
+    return 1;
   }
 
   const mean = findMean(indices);
@@ -122,8 +122,8 @@ function Prediction(props) {
         return _key === key;
       };
 
-      const currentLongest =
-        key === "a"
+      const getLongest = _key =>
+        _key === "a"
           ? longestA
           : key === "b"
           ? longestB
@@ -131,12 +131,24 @@ function Prediction(props) {
           ? longestC
           : 1;
 
+      const getMatch = _key =>
+        _key === "a" ? matchA : key === "b" ? matchB : key === "c" ? matchC : 1;
+
       const penalty = _key => {
         if (isCurrent(_key)) {
           return 1;
         }
 
-        return (currentLongest + 1) * (currentLongest + 1);
+        const currentLongest = getLongest(key);
+        const keyLongest = getLongest(_key);
+        const currentMatch = getMatch(key);
+        const keyMatch = getMatch(_key);
+
+        return (
+          Math.abs((currentLongest - keyLongest) * (currentMatch - keyMatch)) +
+          (currentLongest - 1) * (currentLongest - 1) +
+          2
+        );
       };
 
       textInfo.push({
@@ -154,13 +166,13 @@ function Prediction(props) {
         matchB,
         matchC,
         calculationA:
-          (longestA * longestA * (matchA - 1)) /
+          (longestA * longestA * matchA * (matchA - 1)) /
           (penalty("a") * deviationA * Math.sqrt(Math.sqrt(tokenSize)) + 1),
         calculationB:
-          (longestB * longestB * (matchB - 1)) /
+          (longestB * longestB * matchB * (matchB - 1)) /
           (penalty("b") * deviationB * Math.sqrt(Math.sqrt(tokenSize)) + 1),
         calculationC:
-          (longestC * longestC * (matchC - 1)) /
+          (longestC * longestC * matchC * (matchC - 1)) /
           (penalty("c") * deviationC * Math.sqrt(Math.sqrt(tokenSize)) + 1)
       });
     });

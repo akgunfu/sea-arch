@@ -10,7 +10,7 @@ header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)',
           'Connection': 'keep-alive'}
 
 
-def do_search_texts(query, keyword):
+def do_search_texts(query, keyword, keywords):
     try:
         url = build_url(query)
         url = url.encode("utf-8")
@@ -19,7 +19,7 @@ def do_search_texts(query, keyword):
         response = urllib2.urlopen(request)
         html = response.read()
         soup = BeautifulSoup(html, features="lxml")
-        return get_result(soup, keyword)
+        return get_result(soup, keyword, keywords)
     except Exception as err:
         print "An error occurred while fetching url: " + str(err)
         return 0, []
@@ -29,9 +29,9 @@ def build_url(query):
     return 'http://google.com/search?q=' + query
 
 
-def get_result(soup, choice):
+def get_result(soup, choice, choices):
     result_count = get_result_count(soup)
-    occurrences = get_occurrences(choice, soup)
+    occurrences = get_occurrences(choice, soup, choices)
     return result_count, occurrences
 
 
@@ -49,15 +49,28 @@ def get_result_count(soup):
         return 0
 
 
-def get_occurrences(choice, soup):
+def get_occurrences(choice, soup, choices):
     try:
         previews = soup.findAll("span", {"class": "st"})
         occurrences = []
         for preview in previews:
             current_text = preview.text
-            if choice.lower() in current_text.lower():
-                occurrences.append(current_text)
+            if normalized(choice) in current_text.lower():
+                last_splits = current_text.split("...")
+                last_splits = filter(lambda x: len(x) > 15, last_splits)
+                all_values = list(choices.values())
+                for split in last_splits:
+                    if any(normalized(t) in split.lower() for t in all_values):
+                        occurrences.append(split)
         return occurrences
     except:
         print 'Failed to get occurrences'
         return []
+
+
+def normalized(word):
+    word = word.lower()
+    word = word.replace(".", " ")
+    word = word.replace(",", " ")
+    words = word.split(" ")
+    return " ".join(words)

@@ -125,6 +125,7 @@ function Dashboard() {
       return {
         question: detectionResults.question,
         choice: detectionResults.choices[choice],
+        choices: detectionResults.choices,
         nlp: detectionResults.nlp
       };
     };
