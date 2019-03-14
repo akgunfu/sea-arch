@@ -15,65 +15,74 @@ function Occurrence(props) {
 
   return (
     <Spin spinning={fetching}>
-      {["a", "b", "c"].map((choice, i) => {
-        const containerClass = "occurrences-" + choice;
-        const titleClass = "search-title " + choice;
+      <Row>
+        {["a", "b", "c"].map((choice, i) => {
+          const containerClass = "occurrences-" + choice;
+          const titleClass = "search-title " + choice;
 
-        const selfSearchResult = results[choice] || {};
+          const selfSearchResult = results[choice] || {};
 
-        const selfOccurrences = selfSearchResult.text || [];
-        const selfUsedForm = selfSearchResult.used || "";
+          const selfOccurrences = selfSearchResult.text || [];
+          const selfUsedForm = selfSearchResult.used || "";
 
-        const baseKeywords = [
-          ...question.split(" ").filter(token => token.length > 1)
-        ];
-        const questionKeywords = [
-          ...selfUsedForm.split(" ").filter(token => token.length > 1)
-        ];
-        const nlpKeywords = [
-          ...nlp.split(" ").filter(token => token.length > 2)
-        ];
+          const baseKeywords = [
+            ...question.split(" ").filter(token => token.length > 1)
+          ];
+          const questionKeywords = [
+            ...selfUsedForm.split(" ").filter(token => token.length > 1)
+          ];
+          const nlpKeywords = [
+            ...nlp.split(" ").filter(token => token.length > 2)
+          ];
 
-        return (
-          <div className={containerClass} key={i}>
-            <Row>
-              <Col span={24}>
-                <h2 className={titleClass}>
-                  {choices[choice] || ""} - {selfOccurrences.length}
-                </h2>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={3}>
-                <Spin spinning={fetchingImages}>
-                  {(imageResults.result || [])
-                    .filter(img => img["keyword-index"] === i + 1)
-                    .map(imRes => {
-                      return (
-                        <img className="result-image" src={imRes.url} alt={i} />
-                      );
-                    })}
-                </Spin>
-              </Col>
-              <Col span={21} offset={0}>
-                <Matcher
-                  baseKeywords={baseKeywords}
-                  questionKeywords={questionKeywords}
-                  nlpKeywords={nlpKeywords}
-                  occurrences={selfOccurrences}
-                  current={choice}
-                  keywordA={choices.a || " "}
-                  keywordB={choices.b || " "}
-                  keywordC={choices.c || " "}
-                  classA="answer-keyword-match-a"
-                  classB="answer-keyword-match-b"
-                  classC="answer-keyword-match-c"
-                />
-              </Col>
-            </Row>
-          </div>
-        );
-      })}
+          return (
+            <Col span={8}>
+              <div className={containerClass} key={i}>
+                <Row>
+                  <Col span={24}>
+                    <h2 className={titleClass}>
+                      {choices[choice] || choice.toLocaleUpperCase()} -{" "}
+                      {selfOccurrences.length}
+                    </h2>
+                  </Col>
+                </Row>
+                <Row>
+                  <Spin spinning={fetchingImages}>
+                    {(imageResults.result || [])
+                      .filter(img => img["keyword-index"] === i + 1)
+                      .map(imRes => {
+                        return (
+                          <img
+                            className="result-image"
+                            src={imRes.url}
+                            alt={i}
+                          />
+                        );
+                      })}
+                  </Spin>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <Matcher
+                      baseKeywords={baseKeywords}
+                      questionKeywords={questionKeywords}
+                      nlpKeywords={nlpKeywords}
+                      occurrences={selfOccurrences}
+                      current={choice}
+                      keywordA={choices.a || " "}
+                      keywordB={choices.b || " "}
+                      keywordC={choices.c || " "}
+                      classA="answer-keyword-match-a"
+                      classB="answer-keyword-match-b"
+                      classC="answer-keyword-match-c"
+                    />
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          );
+        })}
+      </Row>
     </Spin>
   );
 }

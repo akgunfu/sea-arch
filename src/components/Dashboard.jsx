@@ -70,6 +70,7 @@ function Dashboard() {
     setSearchResultsGoogle({});
     setReverseResultsGoogle({});
     setImageResultsGoogle({});
+    setDetectionResults({});
   };
 
   const capture = nextStep => {
@@ -166,62 +167,55 @@ function Dashboard() {
   };
 
   return (
-    <Row>
-      <Col span={4}>
-        <Row>
+    <div>
+      <Row>
+        <Col span={4}>
           <History
             onStartSearch={startSearch}
             onStartReverseSearch={startReverseSearch}
             spinning={step !== 0}
           />
-        </Row>
-        <Row>
-          <Question detection={detectionResults} />
-        </Row>
-        <Row>
+        </Col>
+        <Col span={12} offset={2}>
           <Prediction
             results={searchResultsGoogle}
             detection={detectionResults}
           />
-        </Row>
-        <Row>
+        </Col>
+        <Col span={4} offset={2}>
           <Spin spinning={fetchingImagesGoogle}>
             {(imageResultsGoogle.result || [])
               .filter(img => img["keyword-index"] === 0)
               .map(imRes => {
-                return <img className="result-image" src={imRes.url} alt={0} />;
+                return (
+                  <img className="result-image-main" src={imRes.url} alt={0} />
+                );
               })}
           </Spin>
-        </Row>
-      </Col>
-      <Col span={20}>
-        <Card title="Search Results">
-          {mode === 0 && (
-            <Row>
-              <Col span={24}>
-                <Occurrence
-                  detection={detectionResults}
-                  results={searchResultsGoogle}
-                  imageResults={imageResultsGoogle}
-                  fetching={fetchingGoogle}
-                  fetchingImages={fetchingImagesGoogle}
-                />
-              </Col>
-            </Row>
-          )}
-          {mode === 1 && (
-            <Row>
-              <Col span={24}>
-                <ReverseResults
-                  results={reverseResultsGoogle}
-                  fetching={fetchingReverse}
-                />
-              </Col>
-            </Row>
-          )}
-        </Card>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={24}>
+          <Card>
+            {mode === 0 && (
+              <Occurrence
+                detection={detectionResults}
+                results={searchResultsGoogle}
+                imageResults={imageResultsGoogle}
+                fetching={fetchingGoogle}
+                fetchingImages={fetchingImagesGoogle}
+              />
+            )}
+            {mode === 1 && (
+              <ReverseResults
+                results={reverseResultsGoogle}
+                fetching={fetchingReverse}
+              />
+            )}
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 }
 

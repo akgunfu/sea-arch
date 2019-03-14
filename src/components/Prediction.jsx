@@ -203,7 +203,7 @@ function Prediction(props) {
   calc.a = {
     occurrence: occurrenceA,
     searchRatio: countResultsA,
-    mixed: 0.93 * occurrenceA + 0.007 * countResultsA
+    mixed: 0.93 * occurrenceA + 0.07 * countResultsA
   };
 
   calc.b = {
@@ -229,20 +229,22 @@ function Prediction(props) {
     <Card title="Prediction">
       <div>
         {Object.keys(calc).map(key => (
-          <Row className="stats">
-            <Col span={3}>
-              <b>{key.toLocaleUpperCase()}</b>
-            </Col>
-            <Col span={16}>
-              <Col
-                className="stat"
-                span={Math.floor(24 * (calc[key].mixed / total).toFixed(2))}
-              >
-                <br />
+          <Col span={7} offset={1}>
+            <Row className="stats">
+              <Col span={3}>
+                <b>{key.toLocaleUpperCase()}</b>
               </Col>
-            </Col>
-            <Col span={3}>{((100 * calc[key].mixed) / total).toFixed(2)}</Col>
-          </Row>
+              <Col span={15} offset={1}>
+                <Col
+                  className="stat"
+                  span={Math.floor(24 * (calc[key].mixed / total).toFixed(2))}
+                >
+                  <br />
+                </Col>
+              </Col>
+              <Col span={3}>{((100 * calc[key].mixed) / total).toFixed(2)}</Col>
+            </Row>
+          </Col>
         ))}
       </div>
     </Card>
