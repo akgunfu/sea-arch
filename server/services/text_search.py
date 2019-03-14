@@ -55,7 +55,7 @@ def get_occurrences(choice, soup):
         occurrences = []
         for preview in previews:
             current_text = preview.text
-            if choice in current_text:
+            if choice.lower() in current_text.lower():
                 occurrences.append(current_text)
         return occurrences
     except:
