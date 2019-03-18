@@ -1,5 +1,6 @@
 import React from "react";
 import Highlighter from "react-highlight-words";
+import { CHARACTERS, normalize, split } from "./utils";
 
 const markMatched = (word, keywords, className) => {
   if (typeof word !== "string") {
@@ -7,15 +8,13 @@ const markMatched = (word, keywords, className) => {
   }
 
   if (
-    keywords.some(keyword_ =>
-      word.toLocaleLowerCase().includes(keyword_.toLocaleLowerCase())
-    )
+    keywords.some(keyword_ => normalize(word).includes(normalize(keyword_)))
   ) {
     return (
       <Highlighter
         highlightClassName={className}
         searchWords={[...keywords]}
-        textToHighlight={word + " "}
+        textToHighlight={word + CHARACTERS.WHITESPACE}
       />
     );
   }
@@ -39,26 +38,17 @@ function Matcher(props) {
   return (
     <div className="match-container">
       {occurrences.map((text, i) => {
-        const words = text.split(" ");
+        const words = split(text);
         return (
           <p className="entry" key={i}>
             {words.map(word => {
-              let _word = word + " ";
-              _word = markMatched(_word, keywordA.split(" "), classA);
-              _word = markMatched(_word, keywordB.split(" "), classB);
-              _word = markMatched(_word, keywordC.split(" "), classC);
-              _word = markMatched(
-                _word,
-                questionKeywords,
-                "question-keyword-match"
-              );
-              _word = markMatched(_word, nlpKeywords, "question-keyword-match");
-              _word = markMatched(
-                _word,
-                baseKeywords,
-                "question-keyword-match"
-              );
-
+              let _word = word + CHARACTERS.WHITESPACE;
+              _word = markMatched(_word, split(keywordA, 0), classA);
+              _word = markMatched(_word, split(keywordB, 0), classB);
+              _word = markMatched(_word, split(keywordC, 0), classC);
+              _word = markMatched(_word, questionKeywords, "q-k-match");
+              _word = markMatched(_word, nlpKeywords, "q-k-match");
+              _word = markMatched(_word, baseKeywords, "q-k-match");
               return _word;
             })}
           </p>

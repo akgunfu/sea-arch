@@ -5,7 +5,6 @@ import * as config from "../config/client";
 
 import "../assets/styles/style";
 import { Card, Col, Row, message, Spin } from "antd";
-import Question from "./Question";
 import Occurrence from "./Occurrence";
 import ReverseResults from "./ReverseResults";
 import Prediction from "./Prediction";
@@ -187,9 +186,14 @@ function Dashboard() {
           <Spin spinning={fetchingImagesGoogle}>
             {(imageResultsGoogle.result || [])
               .filter(img => img["keyword-index"] === 0)
-              .map(imRes => {
+              .map((imRes, i) => {
                 return (
-                  <img className="result-image-main" src={imRes.url} alt={0} />
+                  <img
+                    className="result-image-main"
+                    src={imRes.url}
+                    alt={0}
+                    key={i}
+                  />
                 );
               })}
           </Spin>

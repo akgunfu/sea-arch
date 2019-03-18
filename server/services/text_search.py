@@ -1,6 +1,7 @@
 import urllib2
 from bs4 import BeautifulSoup
 from unidecode import unidecode
+import re
 
 header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)',
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -55,13 +56,12 @@ def get_occurrences(choice, soup, choices):
         occurrences = []
         for preview in previews:
             current_text = preview.text
-            if normalized(choice) in current_text.lower():
-                last_splits = current_text.split("...")
-                last_splits = filter(lambda x: len(x) > 15, last_splits)
-                all_values = list(choices.values())
-                for split in last_splits:
-                    if any(normalized(t) in split.lower() for t in all_values):
-                        occurrences.append(split)
+            last_splits = current_text.split("...")
+            last_splits = filter(lambda x: len(x) >= 15, last_splits)
+            all_values = list(choices.values())
+            for split in last_splits:
+                if any(normalized(t) in split.lower() for t in all_values):
+                    occurrences.append(re.sub(ur"[^\w']+", " ", split, flags=re.UNICODE))
         return occurrences
     except:
         print 'Failed to get occurrences'
@@ -72,5 +72,4 @@ def normalized(word):
     word = word.lower()
     word = word.replace(".", " ")
     word = word.replace(",", " ")
-    words = word.split(" ")
-    return " ".join(words)
+    return " " + word

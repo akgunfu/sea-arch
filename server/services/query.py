@@ -105,7 +105,7 @@ def merge_keywords(keywords, nlp):
         _keywords.append(keyword)
 
     for nlp_keyword in reversed(nlp):
-        if len(_keywords) < 5:
+        if len(_keywords) <= 5:
             normalized = WHITE_SPACE.join(keywords).lower()
             normalized = normalized.replace("'", "")
             if not nlp_keyword.lower() in normalized:
@@ -122,6 +122,8 @@ def get_normalized_string(token_str):
 
 def beautify(value):
     if type(value) is str or type(value) is unicode:
+        value = value.replace(".", " ")
+        value = value.replace(",", " ")
         return value.replace(NEWLINE, WHITE_SPACE)
     return value
 

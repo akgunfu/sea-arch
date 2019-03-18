@@ -2,6 +2,7 @@ import os
 import sys
 from PIL import Image
 import pytesseract
+import re
 
 from morphology import get_morphological_analysis
 
@@ -41,6 +42,8 @@ def detect_question(text, regex):
     if len(tokens) >= 2:
         question = tokens[0]
         choices = tokens[1]
+
+        question = re.sub(ur"[^\w']+", " ", question, flags=re.UNICODE)
 
         # Use nlp on question to reduce word count and to match more search results
         try:

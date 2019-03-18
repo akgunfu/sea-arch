@@ -1,6 +1,7 @@
 import React from "react";
 import { Col, Row, Spin } from "antd";
 import Matcher from "./Matcher";
+import { CHARACTERS, CHOICES, split } from "./utils";
 
 function Occurrence(props) {
   const {
@@ -11,37 +12,35 @@ function Occurrence(props) {
     fetchingImages = false
   } = props;
 
-  const { choices = {}, nlp = "", question = "" } = detection;
+  const {
+    choices = {},
+    nlp = CHARACTERS.EMPTY,
+    question = CHARACTERS.EMPTY
+  } = detection;
 
   return (
     <Spin spinning={fetching}>
       <Row>
-        {["a", "b", "c"].map((choice, i) => {
+        {[CHOICES.A, CHOICES.B, CHOICES.C].map((choice, i) => {
           const containerClass = "occurrences-" + choice;
           const titleClass = "search-title " + choice;
 
           const selfSearchResult = results[choice] || {};
-
           const selfOccurrences = selfSearchResult.text || [];
-          const selfUsedForm = selfSearchResult.used || "";
+          const selfUsedForm = selfSearchResult.used || CHARACTERS.EMPTY;
 
-          const baseKeywords = [
-            ...question.split(" ").filter(token => token.length > 1)
-          ];
-          const questionKeywords = [
-            ...selfUsedForm.split(" ").filter(token => token.length > 1)
-          ];
-          const nlpKeywords = [
-            ...nlp.split(" ").filter(token => token.length > 2)
-          ];
+          const baseKeywords = split(question);
+          const questionKeywords = split(selfUsedForm);
+          const nlpKeywords = split(nlp);
 
           return (
-            <Col span={8}>
-              <div className={containerClass} key={i}>
+            <Col span={8} key={i}>
+              <div className={containerClass}>
                 <Row>
                   <Col span={24}>
                     <h2 className={titleClass}>
-                      {choices[choice] || choice.toLocaleUpperCase()} -{" "}
+                      {choices[choice] || choice.toLocaleUpperCase()} -
+                      {CHARACTERS.WHITESPACE}
                       {selfOccurrences.length}
                     </h2>
                   </Col>
@@ -50,12 +49,13 @@ function Occurrence(props) {
                   <Spin spinning={fetchingImages}>
                     {(imageResults.result || [])
                       .filter(img => img["keyword-index"] === i + 1)
-                      .map(imRes => {
+                      .map((imRes, j) => {
                         return (
                           <img
                             className="result-image"
                             src={imRes.url}
                             alt={i}
+                            key={j}
                           />
                         );
                       })}
@@ -69,9 +69,9 @@ function Occurrence(props) {
                       nlpKeywords={nlpKeywords}
                       occurrences={selfOccurrences}
                       current={choice}
-                      keywordA={choices.a || " "}
-                      keywordB={choices.b || " "}
-                      keywordC={choices.c || " "}
+                      keywordA={choices.a || CHARACTERS.WHITESPACE}
+                      keywordB={choices.b || CHARACTERS.WHITESPACE}
+                      keywordC={choices.c || CHARACTERS.WHITESPACE}
                       classA="answer-keyword-match-a"
                       classB="answer-keyword-match-b"
                       classC="answer-keyword-match-c"

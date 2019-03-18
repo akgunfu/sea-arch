@@ -11,11 +11,15 @@ function ReverseResults(props) {
       <div className="reverse-results-container">
         <h1>{prediction}</h1>
         <div className="reverse-top-results">
-          {top.map(t => (
+          {top.map((t, i) => (
             <Highlighter
-              highlightClassName="question-keyword-match"
-              searchWords={[...prediction.split(" "), ...['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']]}
+              highlightClassName="q-k-match"
+              searchWords={[
+                ...prediction.split(" "),
+                ...["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+              ]}
               textToHighlight={t + " "}
+              key={i}
             />
           ))}
         </div>
