@@ -4,14 +4,14 @@ import { api } from "../helpers/api";
 import * as config from "../config/client";
 
 import "../assets/styles/style";
-import { Card, Col, Row, message, Spin, Tabs } from "antd";
+import { Card, Col, Row, message, Spin, Tabs, Icon } from "antd";
 import Occurrence from "./Occurrence";
 import ReverseResults from "./ReverseResults";
 import Prediction from "./Prediction";
+import Maps from "./Maps";
 
 import FLAGS from "../assets/images/all_flags.jpg";
-import TR_STATES from "../assets/images/tr_states.png";
-import TR_PLATES_MAP from "../assets/images/tr-plates.png";
+import ZODIACS from "../assets/images/zodiacs.png";
 
 const TabPane = Tabs.TabPane;
 
@@ -209,7 +209,15 @@ function Dashboard() {
         <Col span={24}>
           <Card>
             <Tabs type="card">
-              <TabPane tab="Search Results" key="1">
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="notification" />
+                    Search Results
+                  </span>
+                }
+                key="1"
+              >
                 {mode === 0 && (
                   <Occurrence
                     detection={detectionResults}
@@ -226,19 +234,49 @@ function Dashboard() {
                   />
                 )}
               </TabPane>
-              <TabPane tab="Sentence Analysis" key="2">
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="read" />
+                    Sentence Analysis
+                  </span>
+                }
+                key="2"
+              >
                 <p>Coming soon...</p>
               </TabPane>
-              <TabPane tab="Maps" key="3">
-                <img className="extra-image" src={TR_STATES} alt="TR_STATES" />
-                <img
-                  className="extra-image"
-                  src={TR_PLATES_MAP}
-                  alt="TR_PLATES_MAP"
-                />
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="pushpin" />
+                    Maps
+                  </span>
+                }
+                key="3"
+              >
+                <Maps />
               </TabPane>
-              <TabPane tab="Flags" key="4">
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="flag" />
+                    Flags
+                  </span>
+                }
+                key="4"
+              >
                 <img className="extra-image" src={FLAGS} alt="FLAGS" />
+              </TabPane>
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="deployment-unit" />
+                    Zodiacs
+                  </span>
+                }
+                key="5"
+              >
+                <img className="extra-image" src={ZODIACS} alt="ZODIACS" />
               </TabPane>
             </Tabs>
           </Card>

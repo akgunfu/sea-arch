@@ -179,9 +179,10 @@
   padding: 15px;
 }
 
-.main-image {
+.extra-image {
+  display: block;
   margin: 15px auto;
-  width: 100%;
+  width: 95%;
   height: auto;
-  border: 1px solid #ffffff;
+  border: 1px solid #000000;
 }
