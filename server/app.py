@@ -61,18 +61,23 @@ def screen_shot():
     devices_result = os.popen('adb devices').read()
     # my device
     if 'HVY0218A09003965' in devices_result:
-        os.system("adb exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
-        return response_success()
+        os.system("adb -s " + "HVY0218A09003965 " + "exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
+        return response_success(345)
+    elif '192.168.57.101:5555' in devices_result:
+        os.system("adb -s " + "192.168.57.101:5555 " + "exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
+        return response_success(345)
     else:
         print 'No screenshot for now'
         return response_error("Device is not connected")
 
 
-@app.route('/api/ocr', methods=['GET'])
+@app.route('/api/ocr', methods=['POST'])
 @cross_origin()
 def extract_text():
+    request_data = request.json
+    start = request_data.get('start')
     try:
-        text = get_ocr_result()
+        text = get_ocr_result(start)
         return response_success(text)
     except ValueError as err:
         print 'Cannot detect'

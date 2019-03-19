@@ -17,7 +17,7 @@ import SentenceAnalysis from "./SentenceAnalysis";
 const TabPane = Tabs.TabPane;
 
 function Dashboard() {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState({ step: 0 });
 
   const [mode, setMode] = useState(0);
 
@@ -36,7 +36,7 @@ function Dashboard() {
   const [fetchingReverse, setFetchingReverse] = useState(false);
 
   useEffect(() => {
-    switch (step) {
+    switch (step.step) {
       case 0:
         break;
       case 1:
@@ -63,13 +63,13 @@ function Dashboard() {
   const startSearch = () => {
     reset();
     setMode(0);
-    setStep(1);
+    setStep({ step: 1 });
   };
 
   const startReverseSearch = () => {
     reset();
     setMode(1);
-    setStep(4);
+    setStep({ step: 4 });
   };
 
   const reset = () => {
@@ -82,22 +82,22 @@ function Dashboard() {
   const capture = nextStep => {
     api.get(config.endpoint + "screen-shot").then(response => {
       if (response.successful) {
-        setStep(nextStep);
+        setStep({ step: nextStep, data: response.data });
       } else {
         message.error("Failed to take screenshot");
-        setStep(0);
+        setStep({ step: 0 });
       }
     });
   };
 
   const detect = () => {
-    api.get(config.endpoint + "ocr").then(response => {
+    api.post(config.endpoint + "ocr", { start: step.data }).then(response => {
       if (response.successful) {
         setDetectionResults(response.data);
-        setStep(3);
+        setStep({ step: 3 });
       } else {
         message.error("Failed to detect text");
-        setStep(0);
+        setStep({ step: 0 });
       }
     });
   };
@@ -112,12 +112,12 @@ function Dashboard() {
       })
       .then(values => {
         setFetchingImagesGoogle(false);
-        setStep(0);
+        setStep({ step: 0 });
         setImageResultsGoogle(values.data);
       })
       .catch(ignored => {
         setFetchingImagesGoogle(false);
-        setStep(0);
+        setStep({ step: 0 });
         message.error("Failed to image search");
       });
   };
@@ -140,7 +140,7 @@ function Dashboard() {
     Promise.all(["a", "b", "c"].map(getSearchPromise))
       .then(values => {
         setFetchingGoogle(false);
-        setStep(0);
+        setStep({ step: 0 });
         const results = values.map(v => v.data.result);
         const texts = values.map(v => v.data.texts);
         const useds = values.map(v => v.data.used);
@@ -152,7 +152,7 @@ function Dashboard() {
       })
       .catch(ignored => {
         setFetchingGoogle(false);
-        setStep(0);
+        setStep({ step: 0 });
         message.error("Failed to search");
       });
   };
@@ -164,12 +164,12 @@ function Dashboard() {
       .then(values => {
         setReverseResultsGoogle(values.data.result);
         setFetchingReverse(false);
-        setStep(0);
+        setStep({ step: 0 });
       })
       .catch(ignored => {
         message.error("Failed to image search");
         setFetchingReverse(false);
-        setStep(0);
+        setStep({ step: 0 });
       });
   };
 
@@ -180,7 +180,7 @@ function Dashboard() {
           <History
             onStartSearch={startSearch}
             onStartReverseSearch={startReverseSearch}
-            spinning={step !== 0}
+            spinning={step.step !== 0}
           />
         </Col>
         <Col span={12} offset={2}>

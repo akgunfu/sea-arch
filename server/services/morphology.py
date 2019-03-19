@@ -19,7 +19,8 @@ WHITESPACE = " "
 
 SYMBOLS = ["+", "-", ",", ".", "!", "?", "'", "*", "/", "&", "%", '#', '>', '<', "(", ")", "[", "]", "_", " "]
 VOWELS = [u"a", u"e", u"i", u"ı", u"o", u"ö", u"u", u"ü"]
-TURKISH_CHARS = [u"ç", u"Ç", u"ı", u"İ", u"ğ", u"Ğ", u"ö", u"Ö", u"ü", u"Ü", u"ş", u"Ş"]
+TURKISH_VOWELS = [u"ı", u"İ", u"ö", u"Ö", u"ü", u"Ü"]
+TURKISH_CONSONANTS = [u"ç", u"Ç", u"ğ", u"Ğ", u"ş", u"Ş"]
 
 
 def get_morphological_analysis(question):
@@ -50,6 +51,8 @@ def get_sentence_info(sentence):
         vowel_count = 0
         consonant_count = 0
         symbol_count = 0
+        turkish_v_count = 0
+        turkish_c_count = 0
         turkish_char_count = 0
         for word in raw_words:
             if word in SYMBOLS:
@@ -60,19 +63,25 @@ def get_sentence_info(sentence):
                         symbol_count = symbol_count + 1
                     else:
                         if letter in VOWELS:
+                            if letter in TURKISH_VOWELS:
+                                turkish_v_count = turkish_v_count + 1
+                                turkish_char_count = turkish_char_count + 1
                             vowel_count = vowel_count + 1
                         else:
+                            if letter in TURKISH_CONSONANTS:
+                                turkish_c_count = turkish_c_count + 1
+                                turkish_char_count = turkish_char_count + 1
                             consonant_count = consonant_count + 1
-
-                        if letter in TURKISH_CHARS:
-                            turkish_char_count = turkish_char_count + 1
 
                         letter_count = letter_count + 1
 
-        return {'word': word_count, 'letter': letter_count, 'vowels': vowel_count, 'consonants': consonant_count, 'symbols': symbol_count, 'turkish': turkish_char_count}
+        return {'word': word_count, 'letter': letter_count, 'vowels': vowel_count,
+                'consonants': consonant_count, 'symbols': symbol_count, 'turkish': turkish_char_count,
+                'trVowels': turkish_v_count, 'trConsonants': turkish_c_count}
     except:
         print "Failed to analyze sentence"
-        return {'word': 0, 'letter': 0, 'vowels': 0, 'consonants': 0, 'symbols': 0, 'turkish': 0}
+        return {'word': 0, 'letter': 0, 'vowels': 0, 'consonants': 0, 'symbols': 0,
+                'turkish': 0, 'trVowels': 0, 'trConsonants': 0}
 
 
 

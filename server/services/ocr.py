@@ -9,8 +9,8 @@ from morphology import get_morphological_analysis
 SCREEN_CAPTURE_PATH = '/src/assets/screenshots/screen.png'
 
 
-def get_ocr_result():
-    cropped = get_image()
+def get_ocr_result(start=345):
+    cropped = get_image(start)
     text = pytesseract.image_to_string(cropped, lang="tur", config='--psm 6')
     try:
         return detect_question(text, '?')
@@ -21,7 +21,7 @@ def get_ocr_result():
             raise err_second_try
 
 
-def get_image(start=345):
+def get_image(start):
     current_path = sys.path[0]
     root_path = os.path.abspath(os.path.join(current_path, os.pardir))
     image_path = root_path + SCREEN_CAPTURE_PATH

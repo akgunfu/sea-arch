@@ -1,44 +1,5 @@
-.card-question {
-  border: 1px solid #e9e9e9;
-  border-radius: 1px;
-  height: 70px;
-  padding: 2px;
-  margin-bottom: 5px;
-  font-size: 10px;
-}
-
-.card-answers {
-  margin-top: 3px;
-}
-
-.card-answer {
-  font-size: 8px;
-  margin: 3px;
-  height: 20px;
-  border: 1px solid #e9e9e9;
-  border-radius: 1px;
-  padding: 2px;
-  justify-content: center;
-}
-
-.stats-container {
-  margin: 5px;
-}
-
-.stats {
-  padding: 10px 30px 5px 10px;
-  border: 1px solid black;
-  margin-top: 10px;
-}
-
-.stat-row {
-  margin-top: 5px;
-}
-
-.stat {
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  background-color: chartreuse;
+.question-analysis {
+  text-align: center;
 }
 
 .answer-keyword-match-a {
@@ -138,6 +99,7 @@
   margin-right: auto;
   width: auto;
   height: 250px;
+  max-width: 95%;
   margin-bottom: 15px;
   border: 1px solid #ffffff;
 }
@@ -148,6 +110,7 @@
   margin-right: auto;
   width: auto;
   height: 150px;
+  max-width: 95%;
   border: 1px solid #ffffff;
 }
 
@@ -185,4 +148,16 @@
   width: 95%;
   height: auto;
   border: 1px solid #000000;
+}
+
+.stats {
+  padding: 10px 30px 5px 10px;
+  border: 1px solid black;
+  margin-top: 10px;
+}
+
+.stat {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: chartreuse;
 }
