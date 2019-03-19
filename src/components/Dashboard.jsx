@@ -12,6 +12,7 @@ import Maps from "./Maps";
 
 import FLAGS from "../assets/images/all_flags.jpg";
 import ZODIACS from "../assets/images/zodiacs.png";
+import SentenceAnalysis from "./SentenceAnalysis";
 
 const TabPane = Tabs.TabPane;
 
@@ -243,7 +244,7 @@ function Dashboard() {
                 }
                 key="2"
               >
-                <p>Coming soon...</p>
+                <SentenceAnalysis detectionResults={detectionResults} />
               </TabPane>
               <TabPane
                 tab={

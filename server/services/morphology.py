@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 
@@ -15,6 +17,10 @@ THIRD_BLOCK = ['Adj', 'Unk']
 
 WHITESPACE = " "
 
+SYMBOLS = ["+", "-", ",", ".", "!", "?", "'", "*", "/", "&", "%", '#', '>', '<', "(", ")", "[", "]", "_", " "]
+VOWELS = [u"a", u"e", u"i", u"ı", u"o", u"ö", u"u", u"ü"]
+TURKISH_CHARS = [u"ç", u"Ç", u"ı", u"İ", u"ğ", u"Ğ", u"ö", u"Ö", u"ü", u"Ü", u"ş", u"Ş"]
+
 
 def get_morphological_analysis(question):
     command = get_shell_command(question)
@@ -23,15 +29,51 @@ def get_morphological_analysis(question):
         shell_result = result.split(SHELL_SPLIT)[1]
         analysis_result = shell_result.split(ROW_SPLIT)
 
+        info = get_sentence_info(question)
+
         words = get_words(analysis_result)
         words = filter_words(words, FIRST_BLOCK, True)
         words = filter_words(words, SECOND_BLOCK, False)
         words = filter_words(words, THIRD_BLOCK, False, 8)
 
-        return WHITESPACE.join(map(lambda x: x['stem'], words))
+        return WHITESPACE.join(map(lambda x: x['stem'], words)), info
     except Exception as e:
         print str(e)
         raise ValueError("An error occurred while analyzing the sentence")
+
+
+def get_sentence_info(sentence):
+    try:
+        raw_words = sentence.split(" ")
+        word_count = len(raw_words)
+        letter_count = 0
+        vowel_count = 0
+        consonant_count = 0
+        symbol_count = 0
+        turkish_char_count = 0
+        for word in raw_words:
+            if word in SYMBOLS:
+                symbol_count = symbol_count + 1
+            else:
+                for letter in word:
+                    if letter in SYMBOLS:
+                        symbol_count = symbol_count + 1
+                    else:
+                        if letter in VOWELS:
+                            vowel_count = vowel_count + 1
+                        else:
+                            consonant_count = consonant_count + 1
+
+                        if letter in TURKISH_CHARS:
+                            turkish_char_count = turkish_char_count + 1
+
+                        letter_count = letter_count + 1
+
+        return {'word': word_count, 'letter': letter_count, 'vowels': vowel_count, 'consonants': consonant_count, 'symbols': symbol_count, 'turkish': turkish_char_count}
+    except:
+        print "Failed to analyze sentence"
+        return {'word': 0, 'letter': 0, 'vowels': 0, 'consonants': 0, 'symbols': 0, 'turkish': 0}
+
 
 
 def get_shell_command(question):
