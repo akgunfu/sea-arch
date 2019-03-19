@@ -83,6 +83,16 @@ def extract_text():
         print 'Cannot detect'
         return response_error(str(err))
 
+@app.route('/api/query', methods=['POST'])
+@cross_origin()
+def query_search():
+    request_data = request.json
+    query = request_data.get('query')
+    choice = request_data.get('choice')
+    search_query, used = build_query(query, [choice], query)
+    result, text = do_search_texts(search_query, choice, {1: choice})
+    return response_success({'result': result, 'texts': text, 'used': used})
+
 
 def response_success(data={}):
     return jsonify({

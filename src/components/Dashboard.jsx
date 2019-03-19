@@ -13,6 +13,7 @@ import Maps from "./Maps";
 import FLAGS from "../assets/images/all_flags.jpg";
 import ZODIACS from "../assets/images/zodiacs.png";
 import SentenceAnalysis from "./SentenceAnalysis";
+import { CHOICES } from "./utils";
 
 const TabPane = Tabs.TabPane;
 
@@ -21,15 +22,21 @@ function Dashboard() {
 
   const [mode, setMode] = useState(0);
 
+  const [query, setQuery] = useState("");
+
   const [detectionResults, setDetectionResults] = useState({});
 
   const [searchResultsGoogle, setSearchResultsGoogle] = useState({});
+
+  const [queryResultsGoogle, setQueryResultsGoogle] = useState({});
 
   const [imageResultsGoogle, setImageResultsGoogle] = useState({});
 
   const [reverseResultsGoogle, setReverseResultsGoogle] = useState({});
 
   const [fetchingGoogle, setFetchingGoogle] = useState(false);
+
+  const [fetchingQuery, setFetchingQuery] = useState(false);
 
   const [fetchingImagesGoogle, setFetchingImagesGoogle] = useState(false);
 
@@ -48,6 +55,9 @@ function Dashboard() {
       case 3:
         search_images();
         search();
+        if (query) {
+          query_search();
+        }
         break;
       case 4:
         capture(5);
@@ -73,7 +83,9 @@ function Dashboard() {
   };
 
   const reset = () => {
+    setQuery("");
     setSearchResultsGoogle({});
+    setQueryResultsGoogle({});
     setReverseResultsGoogle({});
     setImageResultsGoogle({});
     setDetectionResults({});
@@ -137,7 +149,7 @@ function Dashboard() {
     };
 
     setFetchingGoogle(true);
-    Promise.all(["a", "b", "c"].map(getSearchPromise))
+    Promise.all([CHOICES.A, CHOICES.B, CHOICES.C].map(getSearchPromise))
       .then(values => {
         setFetchingGoogle(false);
         setStep({ step: 0 });
@@ -173,6 +185,38 @@ function Dashboard() {
       });
   };
 
+  const query_search = () => {
+    const getSearchPromise = choice => {
+      return api.post(config.endpoint + "query", getRequestData(choice));
+    };
+
+    const getRequestData = choice => {
+      return {
+        query,
+        choice: detectionResults.choices[choice]
+      };
+    };
+
+    setFetchingQuery(true);
+    Promise.all([CHOICES.A, CHOICES.B, CHOICES.C].map(getSearchPromise))
+      .then(values => {
+        setFetchingQuery(false);
+        const results = values.map(v => v.data.result);
+        const texts = values.map(v => v.data.texts);
+        const useds = values.map(v => v.data.used);
+        setQueryResultsGoogle({
+          a: { count: results[0], text: texts[0], used: useds[0] },
+          b: { count: results[1], text: texts[1], used: useds[1] },
+          c: { count: results[2], text: texts[2], used: useds[2] }
+        });
+      })
+      .catch(ignored => {
+        setFetchingQuery(false);
+        setStep({ step: 0 });
+        message.error("Failed to query search");
+      });
+  };
+
   return (
     <div>
       <Row>
@@ -180,16 +224,18 @@ function Dashboard() {
           <History
             onStartSearch={startSearch}
             onStartReverseSearch={startReverseSearch}
+            query={query}
+            setQuery={setQuery}
             spinning={step.step !== 0}
           />
         </Col>
-        <Col span={12} offset={2}>
+        <Col span={14} offset={1}>
           <Prediction
             results={searchResultsGoogle}
             detection={detectionResults}
           />
         </Col>
-        <Col span={4} offset={2}>
+        <Col span={4} offset={1}>
           <Spin spinning={fetchingImagesGoogle}>
             {(imageResultsGoogle.result || [])
               .filter(img => img["keyword-index"] === 0)
@@ -220,13 +266,23 @@ function Dashboard() {
                 key="1"
               >
                 {mode === 0 && (
-                  <Occurrence
-                    detection={detectionResults}
-                    results={searchResultsGoogle}
-                    imageResults={imageResultsGoogle}
-                    fetching={fetchingGoogle}
-                    fetchingImages={fetchingImagesGoogle}
-                  />
+                  <div>
+                    <Occurrence
+                      detection={detectionResults}
+                      results={searchResultsGoogle}
+                      imageResults={imageResultsGoogle}
+                      fetching={fetchingGoogle}
+                      fetchingImages={fetchingImagesGoogle}
+                    />
+                    {query && (
+                      <Occurrence
+                        detection={detectionResults}
+                        results={queryResultsGoogle}
+                        imageResults={{}}
+                        fetching={fetchingQuery}
+                      />
+                    )}
+                  </div>
                 )}
                 {mode === 1 && (
                   <ReverseResults
