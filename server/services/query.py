@@ -102,11 +102,11 @@ def merge_keywords(keywords, nlp):
 
     _keywords = []
     for keyword in keywords:
-        _keywords.append(keyword)
+        _keywords.append(unidecode(keyword))
 
     for nlp_keyword in reversed(nlp):
         if len(_keywords) <= 5:
-            normalized = WHITE_SPACE.join(keywords).lower()
+            normalized = WHITE_SPACE.join(_keywords).lower()
             normalized = normalized.replace("'", "")
             if not nlp_keyword.lower() in normalized:
                 _keywords.append(nlp_keyword)
