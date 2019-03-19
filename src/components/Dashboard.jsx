@@ -9,6 +9,10 @@ import Occurrence from "./Occurrence";
 import ReverseResults from "./ReverseResults";
 import Prediction from "./Prediction";
 
+import FLAGS from "../assets/images/all_flags.jpg";
+import TR_STATES from "../assets/images/tr_states.png";
+import TR_PLATES_MAP from "../assets/images/tr-plates.png";
+
 const TabPane = Tabs.TabPane;
 
 function Dashboard() {
@@ -226,10 +230,15 @@ function Dashboard() {
                 <p>Coming soon...</p>
               </TabPane>
               <TabPane tab="Maps" key="3">
-                <p>Coming soon...</p>
+                <img className="extra-image" src={TR_STATES} alt="TR_STATES" />
+                <img
+                  className="extra-image"
+                  src={TR_PLATES_MAP}
+                  alt="TR_PLATES_MAP"
+                />
               </TabPane>
               <TabPane tab="Flags" key="4">
-                <p>Coming soon...</p>
+                <img className="extra-image" src={FLAGS} alt="FLAGS" />
               </TabPane>
             </Tabs>
           </Card>

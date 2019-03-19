@@ -178,3 +178,10 @@
   font-size: 15px;
   padding: 15px;
 }
+
+.main-image {
+  margin: 15px auto;
+  width: 100%;
+  height: auto;
+  border: 1px solid #ffffff;
+}
