@@ -9,9 +9,9 @@ DEFAULT_ENCODING = "utf-8"
 SHELL_SPLIT = "###---###"
 ROW_SPLIT = "<<!!>>"
 
-FIRST_BLOCK = ['Ques', 'Punc', 'Unk', 'Conj', 'Det', 'Postp', 'PCNom', 'Conj', 'PCGen', 'Pron', 'Demons', 'PCDat']
+FIRST_BLOCK = ['Ques', 'Punc', 'Conj', 'Det', 'Postp', 'PCNom', 'Conj', 'PCGen', 'Pron', 'Demons', 'PCDat']
 SECOND_BLOCK = ['Adv', 'Verb']
-THIRD_BLOCK = ['Adj']
+THIRD_BLOCK = ['Adj', 'Unk']
 
 WHITESPACE = " "
 
@@ -73,7 +73,7 @@ def get_word_analysis(word_analysis):
 # Filters tokens depending on blocked list and max size constraint
 def filter_words(words, blocked, override, max_size=7):
     _words = []
-    if len(words) > max_size or override:
+    if len(words) >= max_size or override:
         for word in words:
             is_blocked = get_if_blocked(word['types'], blocked)
             if not is_blocked:
