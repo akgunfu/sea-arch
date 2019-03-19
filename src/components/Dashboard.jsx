@@ -4,10 +4,12 @@ import { api } from "../helpers/api";
 import * as config from "../config/client";
 
 import "../assets/styles/style";
-import { Card, Col, Row, message, Spin } from "antd";
+import { Card, Col, Row, message, Spin, Tabs } from "antd";
 import Occurrence from "./Occurrence";
 import ReverseResults from "./ReverseResults";
 import Prediction from "./Prediction";
+
+const TabPane = Tabs.TabPane;
 
 function Dashboard() {
   const [step, setStep] = useState(0);
@@ -202,21 +204,34 @@ function Dashboard() {
       <Row>
         <Col span={24}>
           <Card>
-            {mode === 0 && (
-              <Occurrence
-                detection={detectionResults}
-                results={searchResultsGoogle}
-                imageResults={imageResultsGoogle}
-                fetching={fetchingGoogle}
-                fetchingImages={fetchingImagesGoogle}
-              />
-            )}
-            {mode === 1 && (
-              <ReverseResults
-                results={reverseResultsGoogle}
-                fetching={fetchingReverse}
-              />
-            )}
+            <Tabs type="card">
+              <TabPane tab="Search Results" key="1">
+                {mode === 0 && (
+                  <Occurrence
+                    detection={detectionResults}
+                    results={searchResultsGoogle}
+                    imageResults={imageResultsGoogle}
+                    fetching={fetchingGoogle}
+                    fetchingImages={fetchingImagesGoogle}
+                  />
+                )}
+                {mode === 1 && (
+                  <ReverseResults
+                    results={reverseResultsGoogle}
+                    fetching={fetchingReverse}
+                  />
+                )}
+              </TabPane>
+              <TabPane tab="Sentence Analysis" key="2">
+                <p>Coming soon...</p>
+              </TabPane>
+              <TabPane tab="Maps" key="3">
+                <p>Coming soon...</p>
+              </TabPane>
+              <TabPane tab="Flags" key="4">
+                <p>Coming soon...</p>
+              </TabPane>
+            </Tabs>
           </Card>
         </Col>
       </Row>
