@@ -12,6 +12,8 @@ import Maps from "./Maps";
 
 import FLAGS from "../assets/images/all_flags.jpg";
 import ZODIACS from "../assets/images/zodiacs.png";
+import OTTOMANS from "../assets/images/ottoman.png";
+
 import SentenceAnalysis from "./SentenceAnalysis";
 import { CHOICES } from "./utils";
 
@@ -334,6 +336,17 @@ function Dashboard() {
                 key="5"
               >
                 <img className="extra-image" src={ZODIACS} alt="ZODIACS" />
+              </TabPane>
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="team" />
+                    Ottomans
+                  </span>
+                }
+                key="6"
+              >
+                <img className="extra-image" src={OTTOMANS} alt="OTTOMANS" />
               </TabPane>
             </Tabs>
           </Card>

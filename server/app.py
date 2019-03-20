@@ -65,7 +65,7 @@ def screen_shot():
         return response_success(345)
     elif '192.168.57.101:5555' in devices_result:
         os.system("adb -s " + "192.168.57.101:5555 " + "exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
-        return response_success(345)
+        return response_success(220)
     else:
         print 'No screenshot for now'
         return response_error("Device is not connected")
