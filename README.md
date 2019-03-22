@@ -6,16 +6,13 @@ Answer fetcher for multiple choice quiz apps
 ```
 git clone git@github.com:akgunfu/sea-arch.git
 cd sea-arch
-```
-### Installing dependencies
-```
-bash install.sh
+make install
 ```
 
 ### For development server (runs only React)
 ```
-yarn start
+make debug
 ```
 ### For production server (runs both React and Server)
 ```
-yarn production
+make start
