@@ -63,6 +63,9 @@ def screen_shot():
     if 'HVY0218A09003965' in devices_result:
         os.system("adb -s " + "HVY0218A09003965 " + "exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
         return response_success(345)
+    elif '9e599a8d' in devices_result:
+        os.system("adb -s " + "9e599a8d " + "exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
+        return response_success(365)
     elif '192.168.57.101:5555' in devices_result:
         os.system("adb -s " + "192.168.57.101:5555 " + "exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
         return response_success(220)

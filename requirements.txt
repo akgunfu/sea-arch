@@ -1,5 +1,7 @@
 Flask==0.12.2
 Flask-Cors==3.0.3
+Pillow
 pytesseract
-PIL
+unidecode
+requests
 bs4
