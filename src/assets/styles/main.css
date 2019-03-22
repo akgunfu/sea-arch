@@ -170,3 +170,9 @@
   width: 90%;
   margin: 10px auto;
 }
+
+.card-image {
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}

@@ -13,7 +13,7 @@ ROW_SPLIT = "<<!!>>"
 
 FIRST_BLOCK = ['Ques', 'Punc', 'Conj', 'Det', 'Postp', 'PCNom', 'Conj', 'PCGen', 'Pron', 'Demons', 'PCDat']
 SECOND_BLOCK = ['Adv', 'Verb']
-THIRD_BLOCK = ['Adj', 'Unk']
+THIRD_BLOCK = ['Adj']
 
 WHITESPACE = " "
 
@@ -35,7 +35,7 @@ def get_morphological_analysis(question):
         words = get_words(analysis_result)
         words = filter_words(words, FIRST_BLOCK, True)
         words = filter_words(words, SECOND_BLOCK, False)
-        words = filter_words(words, THIRD_BLOCK, False, 8)
+        words = filter_words(words, THIRD_BLOCK, False, 9)
 
         return WHITESPACE.join(map(lambda x: x['stem'], words)), info
     except Exception as e:

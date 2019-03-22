@@ -13,9 +13,11 @@ import Maps from "./Maps";
 import FLAGS from "../assets/images/all_flags.jpg";
 import ZODIACS from "../assets/images/zodiacs.png";
 import OTTOMANS from "../assets/images/ottoman.png";
+import OTTOMAN_TIMELINE from "../assets/images/ottoman-timeline.png";
 
 import SentenceAnalysis from "./SentenceAnalysis";
 import { CHOICES } from "./utils";
+import Space from "./Space";
 
 const TabPane = Tabs.TabPane;
 
@@ -346,7 +348,23 @@ function Dashboard() {
                 }
                 key="6"
               >
+                <img
+                  className="extra-image"
+                  src={OTTOMAN_TIMELINE}
+                  alt="OTTOMAN_TIMELINE"
+                />
                 <img className="extra-image" src={OTTOMANS} alt="OTTOMANS" />
+              </TabPane>
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type="rocket" />
+                    Space
+                  </span>
+                }
+                key="7"
+              >
+                <Space />
               </TabPane>
             </Tabs>
           </Card>
