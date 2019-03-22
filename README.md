@@ -1,15 +1,7 @@
 # sea-arch
 Answer fetcher for multiple choice quiz apps
 
-
-## Requirements
-- Python 2.7 or higher
-- Node.js (for React)
-- Android SDK (for adb)
-- Java 8 or higher (for JVM)
-- Tesseract (for text detection)
-
-## Setup
+## Setup (macOS)
 
 ```
 git clone git@github.com:akgunfu/sea-arch.git
@@ -17,14 +9,13 @@ cd sea-arch
 ```
 ### Installing dependencies
 ```
-yarn install
-pip install -r requirements.txt
+bash install.sh
 ```
 
-### For development server
+### For development server (runs only React)
 ```
 yarn start
 ```
-### For production server
+### For production server (runs both React and Server)
 ```
 yarn production
