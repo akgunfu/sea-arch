@@ -53,6 +53,9 @@ function Prediction(props) {
 
   const calc = getFinalCalculation(info, results);
 
+  console.log(info);
+  console.log(calc);
+
   const total = Object.values(calc)
     .map(c => c.mixed)
     .reduce((a, b) => a + b, 1);

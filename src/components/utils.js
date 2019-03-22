@@ -107,13 +107,13 @@ export const getTextPrediction = (
     matchC,
     calculationA:
       (longestA * longestA * (matchA - 1)) /
-      (penalty(CHOICES.A) * deviationA * Math.sqrt(tokenSize)),
+      (penalty(CHOICES.A) * Math.sqrt((tokenSize - matchA) * deviationA) + 1),
     calculationB:
       (longestB * longestB * (matchB - 1)) /
-      (penalty(CHOICES.B) * deviationB * Math.sqrt(tokenSize)),
+      (penalty(CHOICES.B) * Math.sqrt((tokenSize - matchB) * deviationB) + 1),
     calculationC:
       (longestC * longestC * (matchC - 1)) /
-      (penalty(CHOICES.C) * deviationC * Math.sqrt(tokenSize))
+      (penalty(CHOICES.C) * Math.sqrt((tokenSize - matchC) * deviationC) + 1)
   });
 };
 
@@ -125,24 +125,21 @@ export const getFinalCalculation = (info, results) => {
     .flat();
   const countResultsA = (info.a || {}).result || 0;
   let occurrenceA =
-    (Math.sqrt(((results[CHOICES.A] || {}).text || []).length + 1) *
-      calculationsA.reduce((a = 0, b = 0) => a + b, 0)) /
+    calculationsA.reduce((a = 0, b = 0) => a + b, 0) /
     (calculationsA.length + INSIGNIFICANT);
   const calculationsB = Object.values(info)
     .map(i => i.textInfo.map(t => t.calculationB))
     .flat();
   const countResultsB = (info.b || {}).result || 0;
   let occurrenceB =
-    (Math.sqrt(((results[CHOICES.B] || {}).text || []).length + 1) *
-      calculationsB.reduce((a = 0, b = 0) => a + b, 0)) /
+    calculationsB.reduce((a = 0, b = 0) => a + b, 0) /
     (calculationsB.length + INSIGNIFICANT);
   const calculationsC = Object.values(info)
     .map(i => i.textInfo.map(t => t.calculationC))
     .flat();
   const countResultsC = (info.c || {}).result || 0;
   let occurrenceC =
-    (Math.sqrt(((results[CHOICES.C] || {}).text || []).length + 1) *
-      calculationsC.reduce((a = 0, b = 0) => a + b, 0)) /
+    calculationsC.reduce((a = 0, b = 0) => a + b, 0) /
     (calculationsC.length + INSIGNIFICANT);
 
   const occurrenceTotal =
