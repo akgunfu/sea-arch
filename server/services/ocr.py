@@ -1,30 +1,26 @@
-import os
-import sys
 from PIL import Image
 import pytesseract
 import re
 
 from morphology import get_morphological_analysis
-
-SCREEN_CAPTURE_PATH = '/src/assets/screenshots/screen.png'
+from common import get_capture_path
 
 
 def get_ocr_result(start=345):
-    cropped = get_image(start)
-    text = pytesseract.image_to_string(cropped, lang="tur", config='--psm 6')
+    image = get_image(start)
+    detected = pytesseract.image_to_string(image, lang="tur", config='--psm 6')
     try:
-        return detect_question(text, '?')
+        return detect_question(detected, '?')
     except ValueError as err:
+        print str(err)
         try:
-            return detect_question(text, '\n\n')
+            return detect_question(detected, '\n\n')
         except ValueError as err_second_try:
             raise err_second_try
 
 
 def get_image(start):
-    current_path = sys.path[0]
-    root_path = os.path.abspath(os.path.join(current_path, os.pardir))
-    image_path = root_path + SCREEN_CAPTURE_PATH
+    image_path = get_capture_path()
     image = Image.open(image_path)
     width, height = image.size
     cropped = image.crop((0, start, width, height))

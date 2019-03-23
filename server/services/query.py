@@ -8,10 +8,9 @@ PLUS = "+"
 SYMBOLS = ['-', ',', '.', '+', '/', '*', '#', '!', '?']
 
 
-def build_query(question, choices, nlp):
+def build_query(question, choice, nlp):
     query = ''
-    for choice in choices:
-        query = add_choice(query, choice)
+    query = add_choice(query, choice)
     query, used = add_question(query, question, nlp)
     return query, used
 
@@ -97,21 +96,21 @@ def find_uppercase_words(question, nlp):
 
 
 def merge_keywords(keywords, nlp):
-    nlp = unidecode(nlp)
     nlp = filter(lambda x: len(x) > 1, nlp.split(" "))
 
     _keywords = []
     for keyword in keywords:
-        _keywords.append(unidecode(keyword))
+        _keywords.append(keyword)
 
     for nlp_keyword in reversed(nlp):
-        if len(_keywords) <= 6:
+        if len(_keywords) <= 5:
             normalized = WHITE_SPACE.join(_keywords).lower()
             normalized = normalized.replace("'", "")
             if not nlp_keyword.lower() in normalized:
                 _keywords.append(nlp_keyword)
 
     return _keywords
+
 
 def get_normalized_string(token_str):
     token_str = unidecode(token_str)

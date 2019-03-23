@@ -45,7 +45,7 @@ def get_morphological_analysis(question):
 
 def get_sentence_info(sentence):
     try:
-        raw_words = sentence.split(" ")
+        raw_words = sentence.split(WHITESPACE)
         word_count = len(raw_words)
         letter_count = 0
         vowel_count = 0
@@ -84,7 +84,6 @@ def get_sentence_info(sentence):
                 'turkish': 0, 'trVowels': 0, 'trConsonants': 0}
 
 
-
 def get_shell_command(question):
     current_path = sys.path[0]
     root_path = os.path.abspath(os.path.join(current_path, os.pardir))
@@ -102,7 +101,7 @@ def get_words(analysis_result):
         word_analysis = lines[0]
         word_stems = lines[1]
         root, types = get_word_analysis(word_analysis)
-        used_stem = word_stems.split(WHITESPACE)[-1]
+        used_stem = word_stems.split(WHITESPACE)[0]
 
         # Show all word types, for debugging purposes
         print root, types, word_stems
