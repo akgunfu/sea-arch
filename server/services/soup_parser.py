@@ -7,7 +7,7 @@ def parse_text_search_result(html, must_include=None):
     if must_include is None:
         must_include = []
     try:
-        soup = BeautifulSoup(html, features="lxml")
+        soup = BeautifulSoup(html, features="html.parser")
         occurrences = find_results(soup, must_include)
         return 1, occurrences, []
 

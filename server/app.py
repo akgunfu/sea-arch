@@ -14,6 +14,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 DEVICES = [
     {'serial': 'HVY0218A09003965', 'start': 345},  # akgunfu's device
+    {'serial': '41424156414e3098', 'start': 200},  # oozan's device
     {'serial': '9e599a8d', 'start': 365},  # fehim's device
     {'serial': '192.168.57.101:5555', 'start': 220}  # genymotion emulator
 ]
