@@ -5,3 +5,5 @@ pytesseract
 unidecode
 requests
 bs4
+jpype1
+google_images_download
