@@ -9,11 +9,22 @@ def parse_text_search_result(html, must_include=None):
     try:
         soup = BeautifulSoup(html, features="lxml")
         occurrences = find_results(soup, must_include)
-        return 1, occurrences
+        return 1, occurrences, []
 
     except Exception as err:
         print str(err)
         print 'Failed to get occurrences'
+        return 1, [], []
+
+def parse_query_search_result(html):
+    try:
+        soup = BeautifulSoup(html, "html.parser")
+        top = find_top_result(soup)
+        return 1, top
+
+    except Exception as err:
+        print str(err)
+        print 'Failed to get top results'
         return 1, []
 
 
@@ -49,12 +60,43 @@ def find_results(soup, must_include=None):
         return map(lambda x: x.text, previews)
 
 
+# todo change
 def find_top_result(soup):
     top_spans = []
-    top = soup.find("div", {"class", "xpdopen"})
-    if top is not None:
-        top_spans = top.findAll("span")
-    top_spans = map(lambda x: decode(x.text), top_spans)
+
+    xpdopen = soup.findAll("div", {"class", "xpdopen"})
+    xpdbox = soup.findAll("div", {"class", "xpdbox"})
+    hp_xpdbox = soup.findAll("div", {"class", "hp-xpdbox"})
+    xpdclose = soup.findAll("div", {"class", "xpdclose"})
+    knowledge_panel = soup.findAll("div", {"class", "knowledge-panel"})
+    extabar = soup.findAll("div", {"id", "extabar"})
+
+    for a in knowledge_panel:
+        all_text = a.findAll(text=True)
+        for b in all_text:
+            top_spans.append(b)
+    for a in extabar:
+        all_text = a.findAll(text=True)
+        for b in all_text:
+            top_spans.append(b)
+    for a in xpdopen:
+        all_text = a.findAll(text=True)
+        for b in all_text:
+            top_spans.append(b)
+    for a in xpdbox:
+        all_text = a.findAll(text=True)
+        for b in all_text:
+            top_spans.append(b)
+    for a in hp_xpdbox:
+        all_text = a.findAll(text=True)
+        for b in all_text:
+            top_spans.append(b)
+    for a in xpdclose:
+        all_text = a.findAll(text=True)
+        for b in all_text:
+            top_spans.append(b)
+    top_spans = filter(lambda x: len(x) > 1, top_spans)
+    top_spans = map(lambda x: decode(x), top_spans)
     return top_spans
 
 

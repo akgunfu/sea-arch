@@ -2,7 +2,9 @@ debug:
 	yarn start
 
 start:
+	-killall python
 	-killall adb
+	-clear
 	yarn production
 
 install:

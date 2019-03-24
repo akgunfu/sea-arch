@@ -26,6 +26,7 @@ function Occurrence(props) {
           const titleClass = "search-title " + choice;
 
           const selfSearchResult = results[choice] || {};
+          const selfTopResult = selfSearchResult.top || [];
           const selfOccurrences = selfSearchResult.text || [];
           const selfUsedForm = selfSearchResult.used || CHARACTERS.EMPTY;
 
@@ -60,6 +61,11 @@ function Occurrence(props) {
                         );
                       })}
                   </Spin>
+                </Row>
+                <Row>
+                  {selfTopResult.map(a => (
+                    <p>{a}</p>
+                  ))}
                 </Row>
                 <Row>
                   <Col span={24}>

@@ -1,9 +1,10 @@
-import urllib2
 import requests
+import urllib2
+from selenium import webdriver
 
-from common import get_capture_path
+from common import get_capture_path, get_phantomjs_path
 
-HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)',
+HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) ',
            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
            'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
            'Accept-Encoding': 'none',
@@ -21,6 +22,11 @@ def do_request(url):
     request = urllib2.Request(url, headers=HEADERS)
     response = urllib2.urlopen(request)
     return response.read()
+
+def do_request_simple(url):
+    browser = webdriver.PhantomJS(get_phantomjs_path())
+    browser.get(url)
+    return browser.page_source
 
 
 def image_upload():

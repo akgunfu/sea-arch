@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import History from "./History";
+import Actions from "./Actions";
 import { api } from "../helpers/api";
 import * as config from "../config/client";
 
@@ -8,86 +8,123 @@ import { Card, Col, Row, message, Spin, Tabs, Icon } from "antd";
 import Occurrence from "./Occurrence";
 import ReverseResults from "./ReverseResults";
 import Prediction from "./Prediction";
-import Maps from "./Maps";
-
-import FLAGS from "../assets/images/all_flags.jpg";
-import ZODIACS from "../assets/images/zodiacs.png";
-import OTTOMANS from "../assets/images/ottoman.png";
-import OTTOMAN_TIMELINE from "../assets/images/ottoman-timeline.png";
-
+import Maps from "./infografic/Maps";
 import SentenceAnalysis from "./SentenceAnalysis";
 import { CHOICES } from "./utils";
-import Space from "./Space";
+import Space from "./infografic/Space";
+import KeywordModal from "./KeywordModal";
+import Zodiacs from "./infografic/Zodiacs";
+import Ottomans from "./infografic/Ottomans";
+import Flags from "./infografic/Flags";
 
 const TabPane = Tabs.TabPane;
 
+const SEARCH_MODES = {
+  AUTO_SEARCH: 0,
+  REVERSE_IMAGE_SEARCH: 1,
+  KEYWORD_SEARCH: 2
+};
+
 function Dashboard() {
   const [step, setStep] = useState({ step: 0 });
-
-  const [mode, setMode] = useState(0);
-
+  const [mode, setMode] = useState(SEARCH_MODES.AUTO_SEARCH);
   const [query, setQuery] = useState("");
-
   const [detectionResults, setDetectionResults] = useState({});
-
   const [searchResultsGoogle, setSearchResultsGoogle] = useState({});
-
   const [queryResultsGoogle, setQueryResultsGoogle] = useState({});
-
   const [imageResultsGoogle, setImageResultsGoogle] = useState({});
-
   const [reverseResultsGoogle, setReverseResultsGoogle] = useState({});
-
   const [fetchingGoogle, setFetchingGoogle] = useState(false);
-
   const [fetchingQuery, setFetchingQuery] = useState(false);
-
   const [fetchingImagesGoogle, setFetchingImagesGoogle] = useState(false);
-
   const [fetchingReverse, setFetchingReverse] = useState(false);
+  const [keywordModalVisible, setKeywordModalVisible] = useState(false);
 
   useEffect(() => {
-    switch (step.step) {
-      case 0:
-        break;
-      case 1:
-        capture(2);
-        break;
-      case 2:
-        detect();
-        break;
-      case 3:
-        search_images();
-        search();
-        if (query) {
+    if (mode === SEARCH_MODES.AUTO_SEARCH) {
+      switch (step.step) {
+        case 0:
+          break;
+        case 1:
+          capture();
+          break;
+        case 2:
+          detect(true);
+          break;
+        case 3:
+          search_images();
+          search();
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (mode === SEARCH_MODES.REVERSE_IMAGE_SEARCH) {
+      switch (step.step) {
+        case 0:
+          break;
+        case 1:
+          capture();
+          break;
+        case 2:
+          reverse_search();
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (mode === SEARCH_MODES.KEYWORD_SEARCH) {
+      switch (step.step) {
+        case 0:
+          setQuery("");
+          break;
+        case 1:
+          setKeywordModalVisible(true);
+          capture();
+          break;
+        case 2:
+          detect(false);
+          break;
+        case 3:
+          break;
+        case 4:
+          console.log("hello");
           query_search();
-        }
-        break;
-      case 4:
-        capture(5);
-        break;
-      case 5:
-        reverse_search();
-        break;
-      default:
-        break;
+          break;
+        default:
+          break;
+      }
     }
   }, [step]);
 
   const startSearch = () => {
     reset();
-    setMode(0);
+    setMode(SEARCH_MODES.AUTO_SEARCH);
     setStep({ step: 1 });
   };
 
   const startReverseSearch = () => {
     reset();
-    setMode(1);
-    setStep({ step: 4 });
+    setMode(SEARCH_MODES.REVERSE_IMAGE_SEARCH);
+    setStep({ step: 1 });
+  };
+
+  const startKeywordSearch = () => {
+    reset();
+    setMode(SEARCH_MODES.KEYWORD_SEARCH);
+    setStep({ step: 1 });
+  };
+
+  const continueKeywordSearch = () => {
+    if (step.step === 3) {
+      setStep({ step: 4 });
+      setKeywordModalVisible(false);
+    }
   };
 
   const reset = () => {
-    setQuery("");
     setSearchResultsGoogle({});
     setQueryResultsGoogle({});
     setReverseResultsGoogle({});
@@ -95,10 +132,10 @@ function Dashboard() {
     setDetectionResults({});
   };
 
-  const capture = nextStep => {
+  const capture = () => {
     api.get(config.endpoint + "screen-shot").then(response => {
       if (response.successful) {
-        setStep({ step: nextStep, data: response.data });
+        setStep({ step: 2, data: response.data });
       } else {
         message.error("Failed to take screenshot");
         setStep({ step: 0 });
@@ -106,16 +143,18 @@ function Dashboard() {
     });
   };
 
-  const detect = () => {
-    api.post(config.endpoint + "ocr", { start: step.data }).then(response => {
-      if (response.successful) {
-        setDetectionResults(response.data);
-        setStep({ step: 3 });
-      } else {
-        message.error("Failed to detect text");
-        setStep({ step: 0 });
-      }
-    });
+  const detect = useNlp => {
+    api
+      .post(config.endpoint + "ocr", { start: step.data, nlp: useNlp })
+      .then(response => {
+        if (response.successful) {
+          setDetectionResults(response.data);
+          setStep({ step: 3 });
+        } else {
+          message.error("Failed to detect text");
+          setStep({ step: 0 });
+        }
+      });
   };
 
   const search_images = () => {
@@ -205,13 +244,25 @@ function Dashboard() {
     Promise.all([CHOICES.A, CHOICES.B, CHOICES.C].map(getSearchPromise))
       .then(values => {
         setFetchingQuery(false);
+        setStep({ step: 0 });
         const results = values.map(v => v.data.result);
         const texts = values.map(v => v.data.texts);
         const useds = values.map(v => v.data.used);
+        const tops = values.map(v => v.data.top);
         setQueryResultsGoogle({
-          a: { count: results[0], text: texts[0], used: useds[0] },
-          b: { count: results[1], text: texts[1], used: useds[1] },
-          c: { count: results[2], text: texts[2], used: useds[2] }
+          a: {
+            count: results[0],
+            text: texts[0],
+            used: useds[0],
+            top: tops[0]
+          },
+          b: {
+            count: results[1],
+            text: texts[1],
+            used: useds[1],
+            top: tops[1]
+          },
+          c: { count: results[2], text: texts[2], used: useds[2], top: tops[2] }
         });
       })
       .catch(ignored => {
@@ -225,9 +276,10 @@ function Dashboard() {
     <div>
       <Row>
         <Col span={4}>
-          <History
+          <Actions
             onStartSearch={startSearch}
             onStartReverseSearch={startReverseSearch}
+            onStartKeywordSearch={startKeywordSearch}
             query={query}
             setQuery={setQuery}
             spinning={step.step !== 0}
@@ -269,7 +321,7 @@ function Dashboard() {
                 }
                 key="1"
               >
-                {mode === 0 && (
+                {mode === SEARCH_MODES.AUTO_SEARCH && (
                   <div>
                     <Occurrence
                       detection={detectionResults}
@@ -278,21 +330,24 @@ function Dashboard() {
                       fetching={fetchingGoogle}
                       fetchingImages={fetchingImagesGoogle}
                     />
-                    {query && (
-                      <Occurrence
-                        detection={detectionResults}
-                        results={queryResultsGoogle}
-                        imageResults={{}}
-                        fetching={fetchingQuery}
-                      />
-                    )}
                   </div>
                 )}
-                {mode === 1 && (
+                {mode === SEARCH_MODES.REVERSE_IMAGE_SEARCH && (
                   <ReverseResults
                     results={reverseResultsGoogle}
                     fetching={fetchingReverse}
                   />
+                )}
+                {mode === SEARCH_MODES.KEYWORD_SEARCH && (
+                  <div>
+                    <Occurrence
+                      detection={detectionResults}
+                      results={queryResultsGoogle}
+                      imageResults={{}}
+                      fetching={fetchingQuery}
+                      fetchingImages={false}
+                    />
+                  </div>
                 )}
               </TabPane>
               <TabPane
@@ -326,7 +381,7 @@ function Dashboard() {
                 }
                 key="4"
               >
-                <img className="extra-image" src={FLAGS} alt="FLAGS" />
+                <Flags />
               </TabPane>
               <TabPane
                 tab={
@@ -337,7 +392,7 @@ function Dashboard() {
                 }
                 key="5"
               >
-                <img className="extra-image" src={ZODIACS} alt="ZODIACS" />
+                <Zodiacs />
               </TabPane>
               <TabPane
                 tab={
@@ -348,12 +403,7 @@ function Dashboard() {
                 }
                 key="6"
               >
-                <img
-                  className="extra-image"
-                  src={OTTOMAN_TIMELINE}
-                  alt="OTTOMAN_TIMELINE"
-                />
-                <img className="extra-image" src={OTTOMANS} alt="OTTOMANS" />
+                <Ottomans />
               </TabPane>
               <TabPane
                 tab={
@@ -370,6 +420,13 @@ function Dashboard() {
           </Card>
         </Col>
       </Row>
+      <KeywordModal
+        visible={keywordModalVisible}
+        keyword={query}
+        close={() => setKeywordModalVisible(false)}
+        submit={continueKeywordSearch}
+        onChangeKeyword={setQuery}
+      />
     </div>
   );
 }

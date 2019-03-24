@@ -6,15 +6,15 @@ from morphology import get_morphological_analysis
 from common import get_capture_path
 
 
-def get_ocr_result(start=345):
+def get_ocr_result(use_nlp, start=345):
     image = get_image(start)
     detected = pytesseract.image_to_string(image, lang="tur", config='--psm 6')
     try:
-        return detect_question(detected, '?')
+        return detect_question(detected, '?', use_nlp)
     except ValueError as err:
         print str(err)
         try:
-            return detect_question(detected, '\n\n')
+            return detect_question(detected, '\n\n', use_nlp)
         except ValueError as err_second_try:
             raise err_second_try
 
@@ -27,7 +27,7 @@ def get_image(start):
     return cropped
 
 
-def detect_question(text, regex):
+def detect_question(text, regex, use_nlp):
     # Split all text by ? or double new line
     tokens = []
     for token in text.split(regex):
@@ -41,12 +41,15 @@ def detect_question(text, regex):
 
         question = re.sub(ur"[^\w']+", " ", question, flags=re.UNICODE)
 
-        # Use nlp on question to reduce word count and to match more search results
-        try:
-            morph_result, info = get_morphological_analysis(question)
-        except:
-            morph_result = question
-            info = {}
+        morph_result = ""
+        info = {}
+        if use_nlp:
+            # Use nlp on question to reduce word count and to match more search results
+            try:
+                morph_result, info = get_morphological_analysis(question)
+            except:
+                morph_result = question
+                info = {}
 
         # Assume choices
         choice_tokens = []

@@ -2,7 +2,7 @@ import os
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS, cross_origin
 
-from services.text_search import do_search_texts
+from services.text_search import do_search_texts, do_search_top
 from services.image_search import do_search_images
 from services.reverse_image_search import do_reverse_image_search
 from services.query import build_query
@@ -30,8 +30,8 @@ def search():
     choices = request_data.get('choices')
     # do action
     search_query, used = build_query(question, choice, nlp)
-    result, text = do_search_texts(search_query, choices)
-    return response_success({'result': result, 'texts': text, 'used': used})
+    result, text, top = do_search_texts(search_query, choices)
+    return response_success({'result': result, 'texts': text, 'used': used, 'top': top})
 
 
 @app.route('/api/search-images', methods=['POST'])
@@ -81,8 +81,9 @@ def screen_shot():
 def extract_text():
     request_data = request.json
     start = request_data.get('start')
+    use_nlp = request_data.get('nlp')
     try:
-        text = get_ocr_result(start)
+        text = get_ocr_result(use_nlp, start)
         return response_success(text)
     except ValueError as err:
         print 'Cannot detect'
@@ -96,8 +97,8 @@ def query_search():
     query = request_data.get('query')
     choice = request_data.get('choice')
     search_query, used = build_query(query, choice, query)
-    result, text = do_search_texts(search_query, {1: choice})
-    return response_success({'result': result, 'texts': text, 'used': used})
+    result, top = do_search_top(search_query)
+    return response_success({'result': result, 'texts': [], 'used': used, 'top': top})
 
 
 def response_success(data={}):
