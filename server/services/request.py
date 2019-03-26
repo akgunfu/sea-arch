@@ -42,7 +42,6 @@ def do_request_simple(url):
         best_result = browser.find_element_by_xpath("//div[@id='ires'][1]/div[@id='rso']/div/div/div/div/div/div[2]/div[2]")
         if best_result is not None:
             splits = best_result.text.split("\n")
-            print splits
             for split in splits:
                 br.append(split)
     except:
@@ -61,7 +60,6 @@ def do_request_simple(url):
 
         if extabar is not None:
             splits = extabar.text.split("\n")
-            print splits
             for split in splits:
                 eb.append(split)
     except:
@@ -73,7 +71,6 @@ def do_request_simple(url):
         knowledge_panel = browser.find_element_by_xpath("//div[@id='rhs_block'][1]/div")
         if knowledge_panel is not None:
             splits = knowledge_panel.text.split("\n")
-            print splits
             for split in splits:
                 kp.append(split)
     except:
