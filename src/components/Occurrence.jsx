@@ -26,7 +26,9 @@ function Occurrence(props) {
           const titleClass = "search-title " + choice;
 
           const selfSearchResult = results[choice] || {};
-          const selfTopResult = selfSearchResult.top || [];
+          const selfBestResult = selfSearchResult.best || [];
+          const selfExtaResult = selfSearchResult.exta || [];
+          const selfKnowledgeResult = selfSearchResult.knowledge || [];
           const selfOccurrences = selfSearchResult.text || [];
           const selfUsedForm = selfSearchResult.used || CHARACTERS.EMPTY;
 
@@ -62,10 +64,29 @@ function Occurrence(props) {
                       })}
                   </Spin>
                 </Row>
+
                 <Row>
-                  {selfTopResult.map(a => (
-                    <p>{a}</p>
-                  ))}
+                  {selfBestResult.length > 0 && (
+                    <div className="best-result">
+                      {selfBestResult.map(a => (
+                        <h2>{a}</h2>
+                      ))}
+                    </div>
+                  )}
+                  {selfKnowledgeResult.length > 0 && (
+                    <div className="knowledge-result">
+                      {selfKnowledgeResult.map(a => (
+                        <p>{a}</p>
+                      ))}
+                    </div>
+                  )}
+                  {selfExtaResult.length > 0 && (
+                    <div className="exta-result">
+                      {selfExtaResult.map(a => (
+                        <p>{a}</p>
+                      ))}
+                    </div>
+                  )}
                 </Row>
                 <Row>
                   <Col span={24}>

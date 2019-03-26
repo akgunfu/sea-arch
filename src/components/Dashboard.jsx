@@ -245,24 +245,25 @@ function Dashboard() {
       .then(values => {
         setFetchingQuery(false);
         setStep({ step: 0 });
-        const results = values.map(v => v.data.result);
-        const texts = values.map(v => v.data.texts);
-        const useds = values.map(v => v.data.used);
-        const tops = values.map(v => v.data.top);
+        const extabarResults = values.map(v => v.data.extabar_result);
+        const bestResults = values.map(v => v.data.best_result);
+        const knowledgeResults = values.map(v => v.data.knowledge_panel);
         setQueryResultsGoogle({
           a: {
-            count: results[0],
-            text: texts[0],
-            used: useds[0],
-            top: tops[0]
+            best: bestResults[0],
+            exta: extabarResults[0],
+            knowledge: knowledgeResults[0]
           },
           b: {
-            count: results[1],
-            text: texts[1],
-            used: useds[1],
-            top: tops[1]
+            best: bestResults[1],
+            exta: extabarResults[1],
+            knowledge: knowledgeResults[1]
           },
-          c: { count: results[2], text: texts[2], used: useds[2], top: tops[2] }
+          c: {
+            best: bestResults[2],
+            exta: extabarResults[2],
+            knowledge: knowledgeResults[2]
+          }
         });
       })
       .catch(ignored => {

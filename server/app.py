@@ -98,8 +98,8 @@ def query_search():
     query = request_data.get('query')
     choice = request_data.get('choice')
     search_query, used = build_query(query, choice, query)
-    result, top = do_search_top(search_query)
-    return response_success({'result': result, 'texts': [], 'used': used, 'top': top})
+    br, eb, kp = do_search_top(search_query)
+    return response_success({'best_result': br, 'extabar_result': eb, 'knowledge_panel': kp})
 
 
 def response_success(data={}):

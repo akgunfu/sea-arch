@@ -1,6 +1,7 @@
 node_modules
 build
 downloads
+selenium-capture
 *.swp
 *.pem
 *.pyc

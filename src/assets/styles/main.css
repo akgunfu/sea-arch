@@ -176,3 +176,22 @@
   height: auto;
   margin: 0 auto;
 }
+
+.best-result {
+  background-color: white;
+  text-align: center;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.exta-result {
+  background-color: white;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.knowledge-result {
+  background-color: white;
+  padding: 10px;
+  margin: 10px 0;
+}

@@ -17,11 +17,11 @@ def do_search_texts(query, keywords):
 def do_search_top(query):
     try:
         url = build_url(query)
-        html = do_request_simple(url)
-        return parse_query_search_result(html)
+        br, eb, kp = do_request_simple(url)
+        return br, eb, kp
     except Exception as err:
         print "An error occurred while fetching url: " + str(err)
-        return 0, []
+        return [], [], []
 
 
 def build_url(query):

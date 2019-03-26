@@ -60,41 +60,17 @@ def find_results(soup, must_include=None):
         return map(lambda x: x.text, previews)
 
 
-# todo change
+# for now only used by reverse image search uses
 def find_top_result(soup):
     top_spans = []
 
     xpdopen = soup.findAll("div", {"class", "xpdopen"})
-    xpdbox = soup.findAll("div", {"class", "xpdbox"})
-    hp_xpdbox = soup.findAll("div", {"class", "hp-xpdbox"})
-    xpdclose = soup.findAll("div", {"class", "xpdclose"})
-    knowledge_panel = soup.findAll("div", {"class", "knowledge-panel"})
-    extabar = soup.findAll("div", {"id", "extabar"})
 
-    for a in knowledge_panel:
-        all_text = a.findAll(text=True)
-        for b in all_text:
-            top_spans.append(b)
-    for a in extabar:
-        all_text = a.findAll(text=True)
-        for b in all_text:
-            top_spans.append(b)
     for a in xpdopen:
         all_text = a.findAll(text=True)
         for b in all_text:
             top_spans.append(b)
-    for a in xpdbox:
-        all_text = a.findAll(text=True)
-        for b in all_text:
-            top_spans.append(b)
-    for a in hp_xpdbox:
-        all_text = a.findAll(text=True)
-        for b in all_text:
-            top_spans.append(b)
-    for a in xpdclose:
-        all_text = a.findAll(text=True)
-        for b in all_text:
-            top_spans.append(b)
+
     top_spans = filter(lambda x: len(x) > 1, top_spans)
     top_spans = map(lambda x: decode(x), top_spans)
     return top_spans
