@@ -43,13 +43,13 @@ def detect_question(text, regex, use_nlp):
 
         morph_result = ""
         info = {}
+        spelling=[]
         if use_nlp:
             # Use nlp on question to reduce word count and to match more search results
             try:
-                morph_result, info = get_morphological_analysis(question)
+                morph_result, info, spelling = get_morphological_analysis(question)
             except:
                 morph_result = question
-                info = {}
 
         # Assume choices
         choice_tokens = []
@@ -69,7 +69,8 @@ def detect_question(text, regex, use_nlp):
                      'b': choice2,
                      'c': choice3},
                 'nlp': morph_result,
-                'info': info
+                'info': info,
+                'spelling': spelling
             }
 
         else:

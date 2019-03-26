@@ -4,7 +4,7 @@ import { api } from "../helpers/api";
 import * as config from "../config/client";
 
 import "../assets/styles/style";
-import { Card, Col, Row, message, Spin, Tabs, Icon } from "antd";
+import { Card, Col, Row, message, Tabs, Icon } from "antd";
 import Occurrence from "./Occurrence";
 import ReverseResults from "./ReverseResults";
 import Prediction from "./Prediction";
@@ -19,15 +19,17 @@ import Flags from "./infografic/Flags";
 
 const TabPane = Tabs.TabPane;
 
-const SEARCH_MODES = {
-  AUTO_SEARCH: 0,
-  REVERSE_IMAGE_SEARCH: 1,
-  KEYWORD_SEARCH: 2
+export const SEARCH_MODES = {
+  AUTO_SEARCH: { id: 0, name: "Text Search" },
+  REVERSE_IMAGE_SEARCH: { id: 1, name: "Image Search" },
+  KEYWORD_SEARCH: { id: 2, name: "Keyword Search" },
+  SENTENCE_ANALYSIS: { id: 3, name: "Word Analysis" }
 };
 
 function Dashboard() {
   const [step, setStep] = useState({ step: 0 });
-  const [mode, setMode] = useState(SEARCH_MODES.AUTO_SEARCH);
+  const [mode, setMode] = useState(SEARCH_MODES.AUTO_SEARCH.id);
+  const [replayable, setReplayable] = useState(false);
   const [query, setQuery] = useState("");
   const [detectionResults, setDetectionResults] = useState({});
   const [searchResultsGoogle, setSearchResultsGoogle] = useState({});
@@ -41,7 +43,7 @@ function Dashboard() {
   const [keywordModalVisible, setKeywordModalVisible] = useState(false);
 
   useEffect(() => {
-    if (mode === SEARCH_MODES.AUTO_SEARCH) {
+    if (mode === SEARCH_MODES.AUTO_SEARCH.id) {
       switch (step.step) {
         case 0:
           break;
@@ -49,9 +51,10 @@ function Dashboard() {
           capture();
           break;
         case 2:
-          detect(true);
+          detect(true, 3);
           break;
         case 3:
+          setReplayable(true);
           search_images();
           search();
           break;
@@ -60,7 +63,7 @@ function Dashboard() {
       }
     }
 
-    if (mode === SEARCH_MODES.REVERSE_IMAGE_SEARCH) {
+    if (mode === SEARCH_MODES.REVERSE_IMAGE_SEARCH.id) {
       switch (step.step) {
         case 0:
           break;
@@ -68,6 +71,7 @@ function Dashboard() {
           capture();
           break;
         case 2:
+          setReplayable(true);
           reverse_search();
           break;
         default:
@@ -75,53 +79,84 @@ function Dashboard() {
       }
     }
 
-    if (mode === SEARCH_MODES.KEYWORD_SEARCH) {
+    if (mode === SEARCH_MODES.KEYWORD_SEARCH.id) {
       switch (step.step) {
         case 0:
-          setQuery("");
           break;
         case 1:
           setKeywordModalVisible(true);
           capture();
           break;
         case 2:
-          detect(false);
+          detect(false, 3);
           break;
         case 3:
           break;
         case 4:
-          console.log("hello");
+          setReplayable(true);
           query_search();
           break;
         default:
           break;
       }
     }
+
+    if (mode === SEARCH_MODES.SENTENCE_ANALYSIS.id) {
+      switch (step.step) {
+        case 0:
+          break;
+        case 1:
+          capture();
+          break;
+        case 2:
+          setReplayable(true);
+          detect(true, 0);
+          break;
+      }
+    }
   }, [step]);
+
+  const replay = () => {
+    if (mode === SEARCH_MODES.AUTO_SEARCH.id) {
+      setStep({ step: 3, data: step.data });
+    } else if (mode === SEARCH_MODES.REVERSE_IMAGE_SEARCH.id) {
+      setStep({ step: 2, data: step.data });
+    } else if (mode === SEARCH_MODES.KEYWORD_SEARCH.id) {
+      setStep({ step: 3, data: step.data });
+    } else if (mode === SEARCH_MODES.SENTENCE_ANALYSIS.id) {
+      setStep({ step: 2, data: step.data });
+    }
+  };
 
   const startSearch = () => {
     reset();
-    setMode(SEARCH_MODES.AUTO_SEARCH);
-    setStep({ step: 1 });
+    setMode(SEARCH_MODES.AUTO_SEARCH.id);
+    setStep({ step: 1, data: step.data });
   };
 
   const startReverseSearch = () => {
     reset();
-    setMode(SEARCH_MODES.REVERSE_IMAGE_SEARCH);
-    setStep({ step: 1 });
+    setMode(SEARCH_MODES.REVERSE_IMAGE_SEARCH.id);
+    setStep({ step: 1, data: step.data });
   };
 
   const startKeywordSearch = () => {
     reset();
-    setMode(SEARCH_MODES.KEYWORD_SEARCH);
-    setStep({ step: 1 });
+    setMode(SEARCH_MODES.KEYWORD_SEARCH.id);
+    setStep({ step: 1, data: step.data });
   };
 
   const continueKeywordSearch = () => {
     if (step.step === 3) {
-      setStep({ step: 4 });
+      setStep({ step: 4, data: step.data });
       setKeywordModalVisible(false);
     }
+  };
+
+  const startSentenceAnalysis = () => {
+    reset();
+    setMode(SEARCH_MODES.SENTENCE_ANALYSIS.id);
+    setStep({ step: 1, data: step.data });
   };
 
   const reset = () => {
@@ -138,21 +173,21 @@ function Dashboard() {
         setStep({ step: 2, data: response.data });
       } else {
         message.error("Failed to take screenshot");
-        setStep({ step: 0 });
+        setStep({ step: 0, data: step.data });
       }
     });
   };
 
-  const detect = useNlp => {
+  const detect = (useNlp, nextStep) => {
     api
       .post(config.endpoint + "ocr", { start: step.data, nlp: useNlp })
       .then(response => {
         if (response.successful) {
           setDetectionResults(response.data);
-          setStep({ step: 3 });
+          setStep({ step: nextStep, data: step.data });
         } else {
           message.error("Failed to detect text");
-          setStep({ step: 0 });
+          setStep({ step: 0, data: step.data });
         }
       });
   };
@@ -167,12 +202,12 @@ function Dashboard() {
       })
       .then(values => {
         setFetchingImagesGoogle(false);
-        setStep({ step: 0 });
+        setStep({ step: 0, data: step.data });
         setImageResultsGoogle(values.data);
       })
       .catch(ignored => {
         setFetchingImagesGoogle(false);
-        setStep({ step: 0 });
+        setStep({ step: 0, data: step.data });
         message.error("Failed to image search");
       });
   };
@@ -195,7 +230,7 @@ function Dashboard() {
     Promise.all([CHOICES.A, CHOICES.B, CHOICES.C].map(getSearchPromise))
       .then(values => {
         setFetchingGoogle(false);
-        setStep({ step: 0 });
+        setStep({ step: 0, data: step.data });
         const results = values.map(v => v.data.result);
         const texts = values.map(v => v.data.texts);
         const useds = values.map(v => v.data.used);
@@ -207,7 +242,7 @@ function Dashboard() {
       })
       .catch(ignored => {
         setFetchingGoogle(false);
-        setStep({ step: 0 });
+        setStep({ step: 0, data: step.data });
         message.error("Failed to search");
       });
   };
@@ -219,12 +254,12 @@ function Dashboard() {
       .then(values => {
         setReverseResultsGoogle(values.data.result);
         setFetchingReverse(false);
-        setStep({ step: 0 });
+        setStep({ step: 0, data: step.data });
       })
       .catch(ignored => {
         message.error("Failed to image search");
         setFetchingReverse(false);
-        setStep({ step: 0 });
+        setStep({ step: 0, data: step.data });
       });
   };
 
@@ -244,7 +279,7 @@ function Dashboard() {
     Promise.all([CHOICES.A, CHOICES.B, CHOICES.C].map(getSearchPromise))
       .then(values => {
         setFetchingQuery(false);
-        setStep({ step: 0 });
+        setStep({ step: 0, data: step.data });
         const extabarResults = values.map(v => v.data.extabar_result);
         const bestResults = values.map(v => v.data.best_result);
         const knowledgeResults = values.map(v => v.data.knowledge_panel);
@@ -268,7 +303,7 @@ function Dashboard() {
       })
       .catch(ignored => {
         setFetchingQuery(false);
-        setStep({ step: 0 });
+        setStep({ step: 0, data: step.data });
         message.error("Failed to query search");
       });
   };
@@ -276,37 +311,25 @@ function Dashboard() {
   return (
     <div>
       <Row>
-        <Col span={4}>
+        <Col span={12}>
           <Actions
             onStartSearch={startSearch}
             onStartReverseSearch={startReverseSearch}
             onStartKeywordSearch={startKeywordSearch}
+            onStartSentenceAnalysis={startSentenceAnalysis}
+            mode={mode}
+            replay={replay}
+            replayable={replayable}
             query={query}
             setQuery={setQuery}
             spinning={step.step !== 0}
           />
         </Col>
-        <Col span={14} offset={1}>
+        <Col span={12}>
           <Prediction
             results={searchResultsGoogle}
             detection={detectionResults}
           />
-        </Col>
-        <Col span={4} offset={1}>
-          <Spin spinning={fetchingImagesGoogle}>
-            {(imageResultsGoogle.result || [])
-              .filter(img => img["keyword-index"] === 0)
-              .map((imRes, i) => {
-                return (
-                  <img
-                    className="result-image-main"
-                    src={imRes.url}
-                    alt={0}
-                    key={i}
-                  />
-                );
-              })}
-          </Spin>
         </Col>
       </Row>
       <Row>
@@ -322,7 +345,7 @@ function Dashboard() {
                 }
                 key="1"
               >
-                {mode === SEARCH_MODES.AUTO_SEARCH && (
+                {mode === SEARCH_MODES.AUTO_SEARCH.id && (
                   <div>
                     <Occurrence
                       detection={detectionResults}
@@ -333,13 +356,13 @@ function Dashboard() {
                     />
                   </div>
                 )}
-                {mode === SEARCH_MODES.REVERSE_IMAGE_SEARCH && (
+                {mode === SEARCH_MODES.REVERSE_IMAGE_SEARCH.id && (
                   <ReverseResults
                     results={reverseResultsGoogle}
                     fetching={fetchingReverse}
                   />
                 )}
-                {mode === SEARCH_MODES.KEYWORD_SEARCH && (
+                {mode === SEARCH_MODES.KEYWORD_SEARCH.id && (
                   <div>
                     <Occurrence
                       detection={detectionResults}
@@ -350,17 +373,9 @@ function Dashboard() {
                     />
                   </div>
                 )}
-              </TabPane>
-              <TabPane
-                tab={
-                  <span>
-                    <Icon type="read" />
-                    Sentence Analysis
-                  </span>
-                }
-                key="2"
-              >
-                <SentenceAnalysis detectionResults={detectionResults} />
+                {mode === SEARCH_MODES.SENTENCE_ANALYSIS.id && (
+                  <SentenceAnalysis detectionResults={detectionResults} />
+                )}
               </TabPane>
               <TabPane
                 tab={

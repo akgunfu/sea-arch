@@ -33,11 +33,12 @@ def get_morphological_analysis(question):
         info = get_sentence_info(question)
 
         words = get_words(analysis_result)
+        spelling = words
         words = filter_words(words, FIRST_BLOCK, True)
         words = filter_words(words, SECOND_BLOCK, False)
         words = filter_words(words, THIRD_BLOCK, False, 9)
 
-        return WHITESPACE.join(map(lambda x: x['stem'], words)), info
+        return WHITESPACE.join(map(lambda x: x['stem'], words)), info, spelling
     except Exception as e:
         print str(e)
         raise ValueError("An error occurred while analyzing the sentence")

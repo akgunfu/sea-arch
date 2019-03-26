@@ -19,7 +19,37 @@ DEVICES = [
     {'serial': '192.168.57.101:5555', 'start': 220}  # genymotion emulator
 ]
 
+# CAPTURE SCREEN
+@app.route('/api/screen-shot', methods=['GET'])
+@cross_origin()
+def screen_shot():
+    devices_result = os.popen('adb devices').read()
+    for device in DEVICES:
+        serial = device.get('serial')
+        if serial in devices_result:
+            os.system("adb -s " + serial + " exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
+            return response_success(device.get('start'))
+    else:
+        print 'No screenshot for now'
+        return response_error("Device is not connected")
 
+
+# DETECT TEXT
+@app.route('/api/ocr', methods=['POST'])
+@cross_origin()
+def extract_text():
+    request_data = request.json
+    start = request_data.get('start')
+    use_nlp = request_data.get('nlp')
+    try:
+        text = get_ocr_result(use_nlp, start)
+        return response_success(text)
+    except ValueError as err:
+        print 'Cannot detect'
+        return response_error(str(err))
+
+
+# AUTO SEARCH WITH NLP
 @app.route('/api/search', methods=['POST'])
 @cross_origin()
 def search():
@@ -33,6 +63,26 @@ def search():
     search_query, used = build_query(question, choice, nlp)
     result, text, top = do_search_texts(search_query, choices)
     return response_success({'result': result, 'texts': text, 'used': used, 'top': top})
+
+
+# REVERSE IMAGE SEARCH
+@app.route('/api/reverse-image-search', methods=['GET'])
+@cross_origin()
+def reverse_image_search():
+    prediction, top, preview = do_reverse_image_search()
+    return response_success({'result': {'prediction': prediction, 'top': top, 'preview': preview}})
+
+
+# KEYWORD SEARCH
+@app.route('/api/query', methods=['POST'])
+@cross_origin()
+def query_search():
+    request_data = request.json
+    query = request_data.get('query')
+    choice = request_data.get('choice')
+    search_query, used = build_query(query, choice, query)
+    br, eb, kp = do_search_top(search_query)
+    return response_success({'best_result': br, 'extabar_result': eb, 'knowledge_panel': kp})
 
 
 @app.route('/api/search-images', methods=['POST'])
@@ -54,52 +104,6 @@ def search_images():
     used = used.replace(",", ' ')
     result = do_search_images([used, query_a, query_b, query_c])
     return response_success({'result': result})
-
-
-@app.route('/api/reverse-image-search', methods=['GET'])
-@cross_origin()
-def reverse_image_search():
-    prediction, top, preview = do_reverse_image_search()
-    return response_success({'result': {'prediction': prediction, 'top': top, 'preview': preview}})
-
-
-@app.route('/api/screen-shot', methods=['GET'])
-@cross_origin()
-def screen_shot():
-    devices_result = os.popen('adb devices').read()
-    for device in DEVICES:
-        serial = device.get('serial')
-        if serial in devices_result:
-            os.system("adb -s " + serial + " exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
-            return response_success(device.get('start'))
-    else:
-        print 'No screenshot for now'
-        return response_error("Device is not connected")
-
-
-@app.route('/api/ocr', methods=['POST'])
-@cross_origin()
-def extract_text():
-    request_data = request.json
-    start = request_data.get('start')
-    use_nlp = request_data.get('nlp')
-    try:
-        text = get_ocr_result(use_nlp, start)
-        return response_success(text)
-    except ValueError as err:
-        print 'Cannot detect'
-        return response_error(str(err))
-
-
-@app.route('/api/query', methods=['POST'])
-@cross_origin()
-def query_search():
-    request_data = request.json
-    query = request_data.get('query')
-    choice = request_data.get('choice')
-    search_query, used = build_query(query, choice, query)
-    br, eb, kp = do_search_top(search_query)
-    return response_success({'best_result': br, 'extabar_result': eb, 'knowledge_panel': kp})
 
 
 def response_success(data={}):
