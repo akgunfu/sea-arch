@@ -3,6 +3,31 @@ import { Col, Row, Spin } from "antd";
 import Matcher from "./Matcher";
 import { CHARACTERS, CHOICES, split } from "./utils";
 
+// Temporary
+const ucgenify = value => {
+  let _value = value;
+  try {
+    _value = _value.replace("-", " ");
+    _value = _value.replace("_", " ");
+    _value = _value.replace(",", " ");
+
+    const splits = _value.split(" ");
+    if (splits.length === 3) {
+      const a = parseInt(splits[0]);
+      const b = parseInt(splits[1]);
+      const c = parseInt(splits[2]);
+
+      if (a * a + b * b === c * c) {
+        return <p>Dik Üçgen !!!!!!</p>;
+      } else if (a * a + c * c === b * b) {
+        return <p>Dik Üçgen !!!!!!</p>;
+      } else if (b * b + c * c === a * a) {
+        return <p>Dik Üçgen !!!!!!</p>;
+      }
+    }
+  } catch (e) {}
+};
+
 function Occurrence(props) {
   const {
     results,
@@ -20,7 +45,7 @@ function Occurrence(props) {
 
   return (
     <Spin spinning={fetching}>
-      <Row>
+      <Row gutter={5}>
         {[CHOICES.A, CHOICES.B, CHOICES.C].map((choice, i) => {
           const containerClass = "occurrences-" + choice;
           const titleClass = "search-title " + choice;
@@ -49,6 +74,7 @@ function Occurrence(props) {
                   </Col>
                 </Row>
                 <Row>
+                  {ucgenify(choices[choice])}
                   <Spin spinning={fetchingImages}>
                     {(imageResults.result || [])
                       .filter(img => img["keyword-index"] === i + 1)
@@ -64,7 +90,6 @@ function Occurrence(props) {
                       })}
                   </Spin>
                 </Row>
-
                 <Row>
                   {selfBestResult.length > 0 && (
                     <div className="best-result">

@@ -5,7 +5,7 @@
 
 .answer-keyword-match-a {
   padding: 0 5px;
-  font-size: 16px;
+  font-size: 18px;
   border-radius: 5px;
   font-weight: bold;
   color: #ffffff;
@@ -14,7 +14,7 @@
 
 .answer-keyword-match-b {
   padding: 0 5px;
-  font-size: 16px;
+  font-size: 18px;
   border-radius: 5px;
   font-weight: bold;
   color: #ffffff;
@@ -23,7 +23,7 @@
 
 .answer-keyword-match-c {
   padding: 0 5px;
-  font-size: 16px;
+  font-size: 18px;
   border-radius: 5px;
   font-weight: bold;
   color: #ffffff;
@@ -39,30 +39,18 @@
 }
 
 .occurrences-a {
-  margin: 5px;
-  background-color: #688ea9;
-  border: 3px solid #1789fc;
-  border-radius: 8px;
+  background-color: #4fd5f3;
   font-size: 14px;
-  padding: 0 2px;
 }
 
 .occurrences-b {
-  margin: 5px;
   background-color: #bfee9c;
-  border: 3px solid #04db61;
-  border-radius: 8px;
   font-size: 14px;
-  padding: 0 2px;
 }
 
 .occurrences-c {
-  margin: 5px;
   background-color: #ffadb5;
-  border: 3px solid #bf0603;
-  border-radius: 8px;
   font-size: 14px;
-  padding: 0 2px;
 }
 
 .match-container p {
@@ -116,7 +104,8 @@
 }
 
 .spaced {
-  margin-bottom: 15px !important;
+  display: block !important;
+  margin: auto 0 !important;
 }
 
 .reverse-results-container {
@@ -153,9 +142,8 @@
 
 .stats {
   padding: 10px 30px 5px 10px;
-  border: 1px solid black;
+  border: 1px solid #424245;
   border-radius: 5px;
-  margin-top: 10px;
 }
 
 .stat {
@@ -195,4 +183,20 @@
   background-color: white;
   padding: 10px;
   margin: 10px 0;
+}
+
+.header {
+  padding: 10px;
+  border: 1px solid #e9e9e9;
+  background-color: #f9f9f9;
+}
+
+.header-logo {
+  width: 50px;
+  height: 50px;
+  margin-right: 25px;
+}
+
+.centered-vertical {
+  margin: auto 0 !important;
 }

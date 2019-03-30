@@ -1,16 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import { store, history } from "./store";
-import { routes } from "./routes";
-import { ConnectedRouter } from "connected-react-router";
-import "./assets/styles/style";
-
+import "./assets/styles/main.css";
 import "antd/dist/antd.min.css";
+import App from "./App";
 
-ReactDOM.render(
-  <Provider store={store}>
-    <ConnectedRouter history={history}>{routes}</ConnectedRouter>
-  </Provider>,
-  document.getElementById("app")
-);
+ReactDOM.render(<App />, document.getElementById("root"));

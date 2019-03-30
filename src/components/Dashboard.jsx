@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Actions from "./Actions";
 import { api } from "../helpers/api";
 import * as config from "../config/client";
 
@@ -7,7 +6,6 @@ import "../assets/styles/style";
 import { Card, Col, Row, message, Tabs, Icon } from "antd";
 import Occurrence from "./Occurrence";
 import ReverseResults from "./ReverseResults";
-import Prediction from "./Prediction";
 import Maps from "./infografic/Maps";
 import SentenceAnalysis from "./SentenceAnalysis";
 import { CHOICES } from "./utils";
@@ -16,6 +14,7 @@ import KeywordModal from "./KeywordModal";
 import Zodiacs from "./infografic/Zodiacs";
 import Ottomans from "./infografic/Ottomans";
 import Flags from "./infografic/Flags";
+import Header from "./Header";
 
 const TabPane = Tabs.TabPane;
 
@@ -310,28 +309,20 @@ function Dashboard() {
 
   return (
     <div>
-      <Row>
-        <Col span={12}>
-          <Actions
-            onStartSearch={startSearch}
-            onStartReverseSearch={startReverseSearch}
-            onStartKeywordSearch={startKeywordSearch}
-            onStartSentenceAnalysis={startSentenceAnalysis}
-            mode={mode}
-            replay={replay}
-            replayable={replayable}
-            query={query}
-            setQuery={setQuery}
-            spinning={step.step !== 0}
-          />
-        </Col>
-        <Col span={12}>
-          <Prediction
-            results={searchResultsGoogle}
-            detection={detectionResults}
-          />
-        </Col>
-      </Row>
+      <Header
+        onStartSearch={startSearch}
+        onStartReverseSearch={startReverseSearch}
+        onStartKeywordSearch={startKeywordSearch}
+        onStartSentenceAnalysis={startSentenceAnalysis}
+        mode={mode}
+        replay={replay}
+        replayable={replayable}
+        query={query}
+        setQuery={setQuery}
+        spinning={step.step !== 0}
+        results={searchResultsGoogle}
+        detection={detectionResults}
+      />
       <Row>
         <Col span={24}>
           <Card>
