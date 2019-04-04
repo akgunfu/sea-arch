@@ -7,7 +7,7 @@ import Prediction from "./Prediction";
 
 function Header(props) {
   return (
-    <Affix offset={0}>
+    <Affix offsetTop={0}>
       <Row className="header">
         <Col span={3} className="centered-col">
           <img src={LOGO} className="header-logo" />

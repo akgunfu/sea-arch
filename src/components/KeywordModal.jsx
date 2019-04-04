@@ -87,9 +87,9 @@ function KeywordModal(props) {
       <br />
       <br />
       <Row>
-        {[...Array(row_count).keys()].map(r => {
+        {[...Array(row_count).keys()].map((r, index_i) => {
           return (
-            <div>
+            <div key={index_i}>
               <Row gutter={10} key={r}>
                 {[...Array(KEYWORD_PER_ROW).keys()].map(i => {
                   if (KEYWORD_PER_ROW * r + i < KEYWORDS.length) {

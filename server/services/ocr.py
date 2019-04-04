@@ -6,8 +6,8 @@ from morphology import get_morphological_analysis
 from common import get_capture_path
 
 
-def get_ocr_result(use_nlp, start=345):
-    image = get_image(start)
+def get_ocr_result(use_nlp, capture, start=345):
+    image = get_image(start, capture)
     detected = pytesseract.image_to_string(image, lang="tur", config='--psm 6')
     try:
         return detect_question(detected, '?', use_nlp)
@@ -19,8 +19,8 @@ def get_ocr_result(use_nlp, start=345):
             raise err_second_try
 
 
-def get_image(start):
-    image_path = get_capture_path()
+def get_image(start, capture):
+    image_path = get_capture_path(capture)
     image = Image.open(image_path)
     width, height = image.size
     cropped = image.crop((0, start, width, height))

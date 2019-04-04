@@ -3,10 +3,7 @@ import urllib2
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-import time
-current_milli_time = lambda: int(round(time.time() * 1000))
-
-from common import get_capture_path, get_chrome_driver_path
+from common import get_capture_path, get_chrome_driver_path, get_current_time
 
 HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) ',
            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -34,7 +31,7 @@ def do_request_simple(url):
     browser = webdriver.Chrome(get_chrome_driver_path(), chrome_options=options)
     browser.get(url)
 
-    browser.get_screenshot_as_file('selenium-capture/' + str(current_milli_time()) + '.png')
+    browser.get_screenshot_as_file('selenium-capture/' + str(get_current_time()) + '.png')
 
     # Parse results
     br = []
@@ -79,8 +76,8 @@ def do_request_simple(url):
     return br, eb, kp
 
 
-def image_upload():
-    file_path = get_capture_path()
+def image_upload(capture):
+    file_path = get_capture_path(capture)
     multipart = {'encoded_image': (file_path, open(file_path, 'rb')), 'image_content': ''}
     response = requests.post(IMAGE_UPLOAD_URL, files=multipart, allow_redirects=False)
     url = response.headers['Location']

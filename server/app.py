@@ -7,6 +7,7 @@ from services.image_search import do_search_images
 from services.reverse_image_search import do_reverse_image_search
 from services.query import build_query
 from services.ocr import get_ocr_result
+from services.common import get_current_time
 
 app = Flask(__name__, static_folder='../build')
 CORS(app)
@@ -27,8 +28,9 @@ def screen_shot():
     for device in DEVICES:
         serial = device.get('serial')
         if serial in devices_result:
-            os.system("adb -s " + serial + " exec-out screencap -p > $(pwd)/src/assets/screenshots/screen.png")
-            return response_success(device.get('start'))
+            time = get_current_time()
+            os.system("adb -s " + serial + " exec-out screencap -p > $(pwd)/src/assets/screenshots/screen-" + str(time) + ".png")
+            return response_success({'start': device.get('start'), 'capture': "screen-" + str(time) + ".png"})
     else:
         print 'No screenshot for now'
         return response_error("Device is not connected")
@@ -40,9 +42,10 @@ def screen_shot():
 def extract_text():
     request_data = request.json
     start = request_data.get('start')
+    capture = request_data.get('capture')
     use_nlp = request_data.get('nlp')
     try:
-        text = get_ocr_result(use_nlp, start)
+        text = get_ocr_result(use_nlp, capture, start)
         return response_success(text)
     except ValueError as err:
         print 'Cannot detect'
@@ -66,10 +69,12 @@ def search():
 
 
 # REVERSE IMAGE SEARCH
-@app.route('/api/reverse-image-search', methods=['GET'])
+@app.route('/api/reverse-image-search', methods=['POST'])
 @cross_origin()
 def reverse_image_search():
-    prediction, top, preview = do_reverse_image_search()
+    request_data = request.json
+    capture = request_data.get('capture')
+    prediction, top, preview = do_reverse_image_search(capture)
     return response_success({'result': {'prediction': prediction, 'top': top, 'preview': preview}})
 
 

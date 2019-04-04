@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { api } from "../helpers/api";
 import * as config from "../config/client";
 
-import "../assets/styles/style";
 import { Card, Col, Row, message, Tabs, Icon } from "antd";
 import Occurrence from "./Occurrence";
 import ReverseResults from "./ReverseResults";
@@ -179,7 +178,11 @@ function Dashboard() {
 
   const detect = (useNlp, nextStep) => {
     api
-      .post(config.endpoint + "ocr", { start: step.data, nlp: useNlp })
+      .post(config.endpoint + "ocr", {
+        start: (step.data || {}).start,
+        capture: (step.data || {}).capture,
+        nlp: useNlp
+      })
       .then(response => {
         if (response.successful) {
           setDetectionResults(response.data);
@@ -249,7 +252,9 @@ function Dashboard() {
   const reverse_search = () => {
     setFetchingReverse(true);
     api
-      .get(config.endpoint + "reverse-image-search")
+      .post(config.endpoint + "reverse-image-search", {
+        capture: (step.data || {}).capture
+      })
       .then(values => {
         setReverseResultsGoogle(values.data.result);
         setFetchingReverse(false);
