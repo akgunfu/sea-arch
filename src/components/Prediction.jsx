@@ -68,18 +68,18 @@ function Prediction(props) {
       {Object.keys(calc).map(key => (
         <Col span={6} key={key}>
           <Row className="stats">
-            <Col span={3}>
+            <Col span={2}>
               <b>{key.toLocaleUpperCase()}</b>
             </Col>
-            <Col span={15} offset={1}>
+            <Col span={17} offset={1}>
               <Col
                 className="stat"
-                span={Math.floor(24 * (calc[key].mixed / total).toFixed(2))}
+                span={Math.floor(24 * (calc[key].mixed / total).toFixed(1))}
               >
                 <br />
               </Col>
             </Col>
-            <Col span={3}>{((100 * calc[key].mixed) / total).toFixed(2)}</Col>
+            <Col span={4}>{((100 * calc[key].mixed) / total).toFixed(1)}</Col>
           </Row>
         </Col>
       ))}

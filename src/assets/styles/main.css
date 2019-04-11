@@ -200,3 +200,27 @@
 .centered-vertical {
   margin: auto 0 !important;
 }
+
+.header-expand {
+  cursor: pointer;
+  text-align: center;
+  background-color: #eeeeee;
+}
+
+.preview-image-container {
+  text-align: center;
+  padding: 10px;
+}
+
+.preview-image {
+  display: inline-block;
+  transition: transform 0.2s;
+  margin: 10px 5px;
+  width: 150px;
+  height: auto;
+}
+
+.preview-image:hover {
+  transform: scale(1.5);
+  cursor: pointer;
+}
